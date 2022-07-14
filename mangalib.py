@@ -24,15 +24,15 @@ if __name__ == '__main__':
                     if '-' in chapter:
                         chapter = chapter[:chapter.index('-')]
                     num = chapter.strip().split()[-1]
-                    result_arr.append(f'=ГИПЕРССЫЛКА("{chapter_url}";"{num}")')
+                    result_arr.append(f'=ГИПЕРССЫЛКА("{url}";"{num}")')
                     break
                 elif driver.check_element(By.CLASS_NAME, 'paper empty section'):
-                    result_arr.append('-')
+                    result_arr.append(f'=ГИПЕРССЫЛКА("{url}";"-")')
                     break
                 else:
                     total_time -= 0.2
                     if total_time < 0:
-                        result_arr.append('-')
+                        result_arr.append(f'=ГИПЕРССЫЛКА("{url}";"-")')
                         break
                     sleep(0.2)
                     continue

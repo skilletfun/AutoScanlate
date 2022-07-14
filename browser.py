@@ -34,18 +34,18 @@ class Browser:
             By.TAG_NAME: 'return document.getElementsByTagName',
         }
 
-    # def scroll_page(self, key):
-    #     old_count = 0
-    #     count = -1
-    #     while old_count != count or old_count <= 0:
-    #         try:
-    #             old_count = count
-    #             self.driver.execute_script(
-    #                 f"document.getElementsByClassName('{key}')[0].getElementsByTagName('ul')[0].lastChild.scrollIntoView();")
-    #             time.sleep(2)
-    #             count = self.driver.execute_script(
-    #                 f"return document.getElementsByClassName('{key}')[0].getElementsByTagName('ul')[0].childElementCount;")
-    #         except: pass
+    def scroll_page(self, key):
+        old_count = 0
+        count = -1
+        while old_count != count or old_count <= 0:
+            try:
+                old_count = count
+                self.driver.execute_script(
+                    f"document.getElementsByClassName('{key}')[0].getElementsByTagName('ul')[0].lastChild.scrollIntoView();")
+                time.sleep(2)
+                count = self.driver.execute_script(
+                    f"return document.getElementsByClassName('{key}')[0].getElementsByTagName('ul')[0].childElementCount;")
+            except: pass
 
     def get(self, url):
         self.driver.get(url)

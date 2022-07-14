@@ -26,14 +26,16 @@ async def fill_vk():
             script = 'return [' + script + '];'
             res = await aiovk.API(ses).execute(code=script)
 
-            for el in res:
-                res = '\n'.join([note['text'] for note in el['items']])
+            for el in enumerate(res):
+                res = '\n'.join([note['text'] for note in el[1]['items']])
                 for p in res.split('\n')[::-1]:
                     p = p.lower()
                     if len(p) > 10 and 'пончик' in p and payed == '-':
                         payed = p.split()[0] if 'сезон' not in p else p.split()[3]
                     elif len(p) > 10 and 'пончик' not in p:
                         free = p.split()[0] if 'сезон' not in p else p.split()[3]
+                        link = f'https://vk.com/topic-{group_id}_{topics[el[0]]}'
+                        free = f'=ГИПЕРССЫЛКА("{link}";"{free}")'
                         break
                 result_arr.append([payed, free])
                 payed, free = '-', '-'

@@ -61,13 +61,12 @@ if __name__ == '__main__':
                 el = child.find_element(By.CSS_SELECTOR, 'div:nth-child(3)').get_attribute('innerHTML')[2:5]
                 date = child.find_element(By.CSS_SELECTOR, 'a > div > span:nth-child(2)').get_attribute('innerHTML')
                 header = child.find_element(By.CSS_SELECTOR, 'a > h6').text.split()[1]
-                chapter_url = child.find_element(By.CSS_SELECTOR, 'a').get_attribute('href')
 
                 if el.startswith('v'):
                     total_payed += 1
-                    if payed == -1: payed = f'=ГИПЕРССЫЛКА("{chapter_url}";"{header}")'
+                    if payed == -1: payed = f'=ГИПЕРССЫЛКА("{url}";"{header}")'
                 elif el.startswith('p'):
-                    free = f'=ГИПЕРССЫЛКА("{chapter_url}";"{header}")'
+                    free = f'=ГИПЕРССЫЛКА("{url}";"{header}")'
                     break
             result_arr.append([payed, free, total_payed, date, marketing])
         sheeter.write_values(result_arr, RANGES['remanga'], dimension='ROWS')
