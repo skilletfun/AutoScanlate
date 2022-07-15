@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-requests
 aiovk
 bs4
 selenium
@@ -8,14 +6,3 @@ httplib2
 google-api-python-client
 oauth2client
 aiogoogle
-=======
-requests
-aiovk
-bs4
-selenium
-aiohttp
-httplib2
-google-api-python-client
-oauth2client
-aiogoogle
->>>>>>> a0a202e646f80dedb907a2432f6d856afca8ec25
