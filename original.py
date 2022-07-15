@@ -15,13 +15,11 @@ async def fill_original():
     fetcher.start_browser()
     try:
         sheeter = Sheet()
-        # urls = sheeter.get_values()
-        urls = [['https://www.comico.kr/comic/8190']]
+        urls = sheeter.get_values()
         original_dict = dict(await asyncio.gather(*[fill(fetcher, url) for url in enumerate(urls[0])]))
         br_original = await asyncio.gather(*[fill(fetcher, url, browser=True) for url in enumerate(urls[0])])
         original_dict.update(dict(filter(lambda x: x[1] != 'URL error', br_original)))
-        print(original_dict)
-        # sheeter.write_values([[original_dict[k] for k in sorted(original_dict.keys())]], RANGES['original'])
+        sheeter.write_values([[original_dict[k] for k in sorted(original_dict.keys())]], RANGES['original'])
     finally:
         fetcher.shutdown_browser()
 
@@ -33,3 +31,4 @@ if __name__ == '__main__':
         asyncio.run(fill_original())
     except Exception as e:
         log.error(e)
+

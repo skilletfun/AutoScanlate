@@ -95,4 +95,3 @@ class Browser:
 
     def shutdown(self):
         self.driver.close()
-        self.driver.quit()
