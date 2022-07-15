@@ -1,12 +1,12 @@
 import asyncio
 import math
 import aiovk
-from logger import Logger
+from logger import log
 from config import  RANGES, VK_API_TOKEN
 from sheet import Sheet
 from time import time, sleep
 
-
+@log
 async def fill_vk():
     """ Заполнение столбцов Группы ВК
     Столбцы идут: Платки, бесплатки
@@ -45,9 +45,4 @@ async def fill_vk():
 
 
 if __name__ == '__main__':
-    log = Logger()
-    log.log('Start parse VK')
-    try:
-        asyncio.run(fill_vk())
-    except Exception as e:
-        log.error(e)
+    asyncio.run(fill_vk())
