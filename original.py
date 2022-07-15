@@ -1,23 +1,32 @@
-import time
 from fetching import Fetcher
 from sheet import Sheet
 import asyncio
 from config import RANGES
-from logger import Logger
+from logger import log
 
 
-async def fill(fetcher, url, browser=False):
+async def fetch(fetcher: Fetcher, url: str, browser: bool=False) -> (int, Union[int, str]):
+    """ Запрашивает страницу и возвращает номер последней главы
+    :param fetcher: объект, выполняющий запросы и обработку данных
+    :param url: ссылка на главу
+    :param browser: требуется ли для загрузки страницы браузер
+    :return: кортеж из порядкового номера (для сортировки) и номера главы
+    """
     return url[0], await fetcher.fetch(url[1], browser=browser)
 
-async def fill_original():
+@log
+async def fill_original() -> None:
     """ Заполнение столбца Оригинал """
     fetcher = Fetcher()
     fetcher.start_browser()
     try:
         sheeter = Sheet()
         urls = sheeter.get_values()
-        original_dict = dict(await asyncio.gather(*[fill(fetcher, url) for url in enumerate(urls[0])]))
-        br_original = await asyncio.gather(*[fill(fetcher, url, browser=True) for url in enumerate(urls[0])])
+        # Словарь с номерами глав, полученных без браузера
+        original_dict = dict(await asyncio.gather(*[fetch(fetcher, url) for url in enumerate(urls[0])]))
+        # Словарь с номерами глав, полученных через браузер
+        br_original = await asyncio.gather(*[fetch(fetcher, url, browser=True) for url in enumerate(urls[0])])
+        # Полный словарь
         original_dict.update(dict(filter(lambda x: x[1] != 'URL error', br_original)))
         sheeter.write_values([[original_dict[k] for k in sorted(original_dict.keys())]], RANGES['original'])
     finally:
@@ -25,10 +34,4 @@ async def fill_original():
 
 
 if __name__ == '__main__':
-    log = Logger()
-    log.log('Start parse Original')
-    try:
-        asyncio.run(fill_original())
-    except Exception as e:
-        log.error(e)
-
+    asyncio.run(fill_original())
