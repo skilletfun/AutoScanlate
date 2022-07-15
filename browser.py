@@ -9,7 +9,7 @@ import time
 
 
 class Browser:
-    def __init__(self, user=True, full_load=False, proxy=None):
+    def __init__(self, user=True, full_load=False):
         options = Options()
         options.add_argument("--disable-features=VizDisplayCompositor")
         options.add_argument('--disable-extensions')
@@ -18,17 +18,8 @@ class Browser:
         if user:
             options.add_argument("--user-data-dir=" + PATH_TO_BROWSER)
 
-        if not full_load or proxy:
-            capa = DesiredCapabilities.CHROME
-            if proxy:
-                capa['proxy'] = {
-                    "httpProxy": proxy,
-                    "ftpProxy": proxy,
-                    "sslProxy": proxy,
-                    "proxyType": "MANUAL",
-                }
-            if not full_load:
-                capa["pageLoadStrategy"] = "none"
+        if not full_load:
+            capa["pageLoadStrategy"] = "none"
             self.driver = webdriver.Chrome(options=options, desired_capabilities=capa)
         else:
             self.driver = webdriver.Chrome(options=options)
@@ -42,7 +33,7 @@ class Browser:
             By.TAG_NAME: 'return document.getElementsByTagName',
         }
 
-    def scroll_page(self, key):
+    def scroll_page(self, key) -> None:
         old_count = 0
         count = -1
         while old_count != count or old_count <= 0:
@@ -55,7 +46,7 @@ class Browser:
                     f"return document.getElementsByClassName('{key}')[0].getElementsByTagName('ul')[0].childElementCount;")
             except: pass
 
-    def get(self, url):
+    def get(self, url) -> str:
         self.driver.get(url)
         return self.get_source()
 
@@ -64,7 +55,7 @@ class Browser:
         time.sleep(sleep)
         return res
 
-    def check_element(self, by, value, by_driver=False):
+    def check_element(self, by, value, by_driver=False) -> bool:
         """ Проверяет, есть ли на странице элемент
         :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
         :param value: значение для поиска
@@ -74,9 +65,16 @@ class Browser:
         try:
             return self.driver.execute_script(self.CHECK_DICT[by] + f'("{value}");') if not by_driver else self.driver.find_element(by, value)
         except:
-            return None
+            return False
 
-    def wait_element(self, by, value, max_wait, by_driver=False):
+    def wait_element(self, by, value, max_wait, by_driver=False) -> bool:
+        """ Ждет, пока на странице не появится указанный элемент
+        :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
+        :param value: значение элемента, который ожидается
+        :param max_wait: сколько секунд ждать
+        :param by_driver: искать через метод selenium или через script js
+        :return: True / None
+        """
         while True:
             if self.check_element(by, value, by_driver):
                 return True
@@ -86,12 +84,21 @@ class Browser:
                     return False
                 time.sleep(0.2)
 
-
-    def get_source(self):
+    def get_source(self) -> str:
+        """
+        :return: возвращает исходный код страницы браузера
+        """
         return self.driver.page_source
 
-    def send_keys_to(self, by, key, value):
+    def send_keys_to(self, by, key, value) -> None:
+        """ Посылает элементу на странице указанное значение.
+        :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
+        :param key: значение элемента, которому шлется value
+        :param value: посылаемое значение
+        """
         self.driver.find_element(by, key).send_keys(value)
 
-    def shutdown(self):
+    def shutdown(self) -> None:
+        """ Закрывает вкладку и выключает браузер (chromedriver). """
         self.driver.close()
+        self.driver.quit()
