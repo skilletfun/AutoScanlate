@@ -15,7 +15,7 @@ class Sheet:
         self.service = googleapiclient.discovery.build('sheets', 'v4', http=httpAuth)
 
     def get_values(self, out_range: str) -> list[list[str], ...]:
-        """
+        """ Возвращает данные из таблицы
         :param out_range: диапазон данных
         :return: данные из таблицы
         """
@@ -35,8 +35,8 @@ class Sheet:
         ).execute()
         return list(zip(values['valueRanges'][0]['values'][0],values['valueRanges'][1]['values'][0]))
 
-    def write_values(self, data: list, input_range: str, dimension: str='COLUMNS'):
-        """ Пишет в таблицу данные.
+    def write_values(self, data: list, input_range: str, dimension: str='COLUMNS') -> None:
+        """ Пишет в таблицу данные
         :param data: данные
         :param input_range: диапазон, в который будет произведена вставка
         :param dimension: каким образом вставлять данные (столбцы / строки) ['COLUMNS', 'ROWS']
