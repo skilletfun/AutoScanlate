@@ -1,7 +1,7 @@
 import logging
 
 
-_log_format = f"%(asctime)s - [%(name)s] - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s"
+_log_format = f"%(asctime)s - [%(name)s] - %(message)s"
 
 
 class Logger:
@@ -25,7 +25,9 @@ def log(func):
     def wrapper(*args, **kwargs):
         logger.log('Start func: ' + func.__name__)
         try:
-            return func(args, kwargs)
+            return func(*args, **kwargs)
         except Exception as e:
-            logger.error('Error:\n' + e)
+            logger.error('Error in punc: '+ func.__name__)
+            logger.error(e)
+            logger.log(f'Arguments of {func.__name__}:', args, kwargs)
     return wrapper
