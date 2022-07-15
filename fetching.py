@@ -1,13 +1,11 @@
 import time
 from bs4 import BeautifulSoup as bs
-import requests as r
 import json
 from config import HEADERS, ACCOUNTS
 import asyncio
 import aiohttp
 from browser import Browser
 from selenium.webdriver.common.by import By
-from fp.fp import FreeProxy
 
 
 class Fetcher:
