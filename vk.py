@@ -34,7 +34,7 @@ async def fill_vk():
                         payed = p.split()[0] if 'сезон' not in p else p.split()[3]
                     elif len(p) > 10 and 'пончик' not in p:
                         free = p.split()[0] if 'сезон' not in p else p.split()[3]
-                        link = f'https://vk.com/topic-{group_id}_{topics[el[0]]}'
+                        link = f'https://vk.com/topic-{group_id}_{topics[el[0] + i*25]}'
                         free = f'=ГИПЕРССЫЛКА("{link}";"{free}")'
                         break
                 result_arr.append([payed, free])
