@@ -1,61 +1,59 @@
+import time
+
+from typing import Optional
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.support import expected_conditions as EC
+
 from config import PATH_TO_BROWSER, ACCOUNTS
-import time
 
 
 class Browser:
-    def __init__(self, user=True, full_load=False):
+    """ Предоставляет доступ к браузеру. """
+    def __init__(self, user=True, full_load=False, extensions=False):
         options = Options()
         options.add_argument("--disable-features=VizDisplayCompositor")
-        options.add_argument('--disable-extensions')
         options.add_argument('--blink-settings=imagesEnabled=false')
+
+        if not extensions:
+            options.add_argument('--disable-extensions')
 
         if user:
             options.add_argument("--user-data-dir=" + PATH_TO_BROWSER)
 
         if not full_load:
+            capa = DesiredCapabilities.CHROME
             capa["pageLoadStrategy"] = "none"
             self.driver = webdriver.Chrome(options=options, desired_capabilities=capa)
         else:
             self.driver = webdriver.Chrome(options=options)
 
         self.driver.switch_to.new_window('tab')
-        self.max_wait = 5
-
         self.CHECK_DICT = {
             By.ID: 'return document.getElementById',
             By.CLASS_NAME: 'return document.getElementsByClassName',
             By.TAG_NAME: 'return document.getElementsByTagName',
         }
 
-    def scroll_page(self, key) -> None:
-        old_count = 0
-        count = -1
-        while old_count != count or old_count <= 0:
-            try:
-                old_count = count
-                self.driver.execute_script(
-                    f"document.getElementsByClassName('{key}')[0].getElementsByTagName('ul')[0].lastChild.scrollIntoView();")
-                time.sleep(2)
-                count = self.driver.execute_script(
-                    f"return document.getElementsByClassName('{key}')[0].getElementsByTagName('ul')[0].childElementCount;")
-            except: pass
-
-    def get(self, url) -> str:
+    def get(self, url: str) -> None:
+        """ Загружает страницу. """
         self.driver.get(url)
-        return self.get_source()
 
-    def execute(self, script, sleep=0):
+    def execute(self, script: str, sleep: int=0) -> Optional[str]:
+        """ Выполняет js-скрипт в браузере и ждет после этого указанное время
+        :param script: скрипт
+        :param sleep: время ожидания
+        :return: результат выполнения
+        """
         res = self.driver.execute_script(script)
         time.sleep(sleep)
         return res
 
-    def check_element(self, by, value, by_driver=False) -> bool:
+    def check_element(self, by: By, value: str, by_driver: bool=False) -> bool:
         """ Проверяет, есть ли на странице элемент
         :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
         :param value: значение для поиска
@@ -63,11 +61,14 @@ class Browser:
         :return: True / None
         """
         try:
-            return self.driver.execute_script(self.CHECK_DICT[by] + f'("{value}");') if not by_driver else self.driver.find_element(by, value)
+            if by_driver:
+                return self.driver.find_element(by, value)
+            else:
+                return self.driver.execute_script(self.CHECK_DICT[by] + f'("{value}");')
         except:
             return False
 
-    def wait_element(self, by, value, max_wait, by_driver=False) -> bool:
+    def wait_element(self, by: By, value: str, max_wait: int, by_driver: bool=False) -> bool:
         """ Ждет, пока на странице не появится указанный элемент
         :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
         :param value: значение элемента, который ожидается
@@ -85,9 +86,6 @@ class Browser:
                 time.sleep(0.2)
 
     def get_source(self) -> str:
-        """
-        :return: возвращает исходный код страницы браузера
-        """
         return self.driver.page_source
 
     def send_keys_to(self, by, key, value) -> None:
