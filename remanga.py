@@ -1,12 +1,14 @@
-from sheet import Sheet
-from browser import Browser
-from logger import Logger
-from selenium.webdriver.common.by import By
-from time import sleep
-from config import RANGES, ACCOUNTS
 import time
 
+from selenium.webdriver.common.by import By
 
+from sheet import Sheet
+from browser import Browser
+from logger import log
+from config import RANGES, ACCOUNTS
+
+
+@log
 def login_remanga(driver: Browser) -> None:
     """ Вход в аккаунт Реманги.
     :param driver: объект браузера
@@ -19,6 +21,7 @@ def login_remanga(driver: Browser) -> None:
         "document.getElementsByClassName('MuiButton-containedPrimary MuiButton-containedSizeLarge')[0].click();")
     time.sleep(3)
 
+@log
 def wait(driver: Browser) -> (str, list):
     """ Загружает страницу, пока не появятся необходимые элементы.
     :param driver: объект браузера
@@ -47,10 +50,8 @@ def wait(driver: Browser) -> (str, list):
                 driver.driver.refresh()
     return marketing, children
 
-
-if __name__ == '__main__':
-    log = Logger()
-    log.log('Start parse Remanga')
+@log
+def main():
     sheeter = Sheet()
     urls = sheeter.get_values('C4:C1000')[0]
     driver = Browser(full_load=True)
@@ -74,7 +75,6 @@ if __name__ == '__main__':
                 date = child.find_element(By.CSS_SELECTOR, 'a > div > span:nth-child(2)').get_attribute('innerHTML')
                 # Номер главы
                 num = child.find_element(By.CSS_SELECTOR, 'a > h6').text.split()[1]
-
                 if el.startswith('v'):
                     total_payed += 1
                     if payed == '-': payed = f'=ГИПЕРССЫЛКА("{url}";"{num}")'
@@ -84,6 +84,10 @@ if __name__ == '__main__':
             result_arr.append([payed, free, total_payed, date, marketing])
         sheeter.write_values(result_arr, RANGES['remanga'], dimension='ROWS')
     except Exception as e:
-        log.error(e)
+        raise e
     finally:
         driver.shutdown()
+
+
+if __name__ == '__main__':
+    main()
