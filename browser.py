@@ -1,6 +1,6 @@
 import time
 
-from typing import Optional
+from typing import Union
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -43,15 +43,20 @@ class Browser:
         """ Загружает страницу. """
         self.driver.get(url)
 
-    def execute(self, script: str, sleep: int=0) -> Optional[str]:
+    def execute(self, script: str, tries: int=5, sleep: float=0.5) -> Union[str, bool, None]:
         """ Выполняет js-скрипт в браузере и ждет после этого указанное время
         :param script: скрипт
         :param sleep: время ожидания
+        :param tries: количество попыток
         :return: результат выполнения
         """
-        res = self.driver.execute_script(script)
-        time.sleep(sleep)
-        return res
+        while tries > 0:
+            try:
+                return self.driver.execute_script(script)
+            except:
+                time.sleep(sleep)
+                tries -= 1
+        return False
 
     def check_element(self, by: By, value: str, by_driver: bool=False) -> bool:
         """ Проверяет, есть ли на странице элемент
