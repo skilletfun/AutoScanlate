@@ -1,8 +1,11 @@
-from fetching import Fetcher
-from sheet import Sheet
 import asyncio
-from config import RANGES
+
+from typing import Union
+
 from logger import log
+from sheet import Sheet
+from config import RANGES
+from fetching import Fetcher
 
 
 async def fetch(fetcher: Fetcher, url: str, browser: bool=False) -> (int, Union[int, str]):
@@ -21,7 +24,7 @@ async def fill_original() -> None:
     fetcher.start_browser()
     try:
         sheeter = Sheet()
-        urls = sheeter.get_values()
+        urls = sheeter.get_values('B4:B1000')
         # Словарь с номерами глав, полученных без браузера
         original_dict = dict(await asyncio.gather(*[fetch(fetcher, url) for url in enumerate(urls[0])]))
         # Словарь с номерами глав, полученных через браузер
