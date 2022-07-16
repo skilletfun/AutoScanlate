@@ -1,6 +1,6 @@
 import time
 
-from typing import Union
+from typing import Any
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -43,7 +43,7 @@ class Browser:
         """ Загружает страницу. """
         self.driver.get(url)
 
-    def execute(self, script: str, tries: int=5, sleep: float=0.5) -> Union[str, bool, None]:
+    def execute(self, script: str, tries: int=5, sleep: float=0.5) -> Any:
         """ Выполняет js-скрипт в браузере и ждет после этого указанное время
         :param script: скрипт
         :param sleep: время ожидания
