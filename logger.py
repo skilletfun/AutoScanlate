@@ -1,14 +1,15 @@
 import logging
+import traceback
 
 
 _log_format = f"%(asctime)s - [%(name)s] - %(message)s"
 
 
 class Logger:
-    def __init__(self):
+    def __init__(self, name):
         file_handler = logging.FileHandler("logfile.log")
         file_handler.setFormatter(logging.Formatter(_log_format))
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(name)
         self.logger.addHandler(file_handler)
 
     def log(self, msg):
@@ -21,13 +22,10 @@ class Logger:
 
 
 def log(func):
-    logger = Logger()
     def wrapper(*args, **kwargs):
-        logger.log('Start func: ' + func.__name__)
         try:
             return func(*args, **kwargs)
-        except Exception as e:
-            logger.error('Error in punc: '+ func.__name__)
-            logger.error(e)
-            logger.log(f'Arguments of {func.__name__}:', args, kwargs)
+        except:
+            logger = Logger(func.__name__)
+            logger.error(traceback.format_exc())
     return wrapper
