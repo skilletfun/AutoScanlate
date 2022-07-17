@@ -32,7 +32,6 @@ class Browser:
         else:
             self.driver = webdriver.Chrome(options=options)
 
-        self.driver.switch_to.new_window('tab')
         self.CHECK_DICT = {
             By.ID: 'return document.getElementById',
             By.CLASS_NAME: 'return document.getElementsByClassName',
