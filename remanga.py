@@ -36,6 +36,8 @@ def wait(driver: Browser) -> (str, list):
                 marketing = status.split()[-1]
             elif 'Продвижение' in status:
                 marketing = 'Продвижение'
+            elif 'Нет глав' in status:
+                return '-', []
             else:
                 marketing = '-'
             children = driver.execute("return document.getElementsByClassName('MuiGrid-grid-md-6')[0].lastChild.children;")[1:]
