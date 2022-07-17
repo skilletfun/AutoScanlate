@@ -46,7 +46,7 @@ def wait(driver: Browser) -> (str, list):
             timer -= 1
             if timer < 0:
                 timer, tries = 30, tries-1
-                if tries < 0: return '-', '-', []
+                if tries < 0: return '-', []
                 driver.driver.refresh()
     return marketing, children
 
