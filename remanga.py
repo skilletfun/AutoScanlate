@@ -15,8 +15,8 @@ def login_remanga(driver: Browser) -> None:
     """
     driver.get('https://remanga.org')
     driver.execute("document.getElementsByClassName('MuiButtonBase-root')[7].click();")
-    driver.send_keys_to(By.ID, 'login', ACCOUNTS['ramanga'][0])
-    driver.send_keys_to(By.ID, 'password', ACCOUNTS['ramanga'][1])
+    driver.send_keys_to(By.ID, 'login', ACCOUNTS['remanga'][0])
+    driver.send_keys_to(By.ID, 'password', ACCOUNTS['remanga'][1])
     driver.execute(
         "document.getElementsByClassName('MuiButton-containedPrimary MuiButton-containedSizeLarge')[0].click();")
     time.sleep(3)
