@@ -25,7 +25,7 @@ def scroll_page(driver: Browser) -> None:
 
 @log
 def main(url: str) -> str:
-    driver = Browser(user=False, full_load=True, extensions=True)
+    driver = Browser(user=True, full_load=True, extensions=True)
     try:
         driver.get(url)
         driver.wait_element(By.CLASS_NAME, 'mx-11', 20)
