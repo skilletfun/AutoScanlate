@@ -31,7 +31,7 @@ class Browser:
             self.driver = webdriver.Chrome(options=options, desired_capabilities=capa)
         else:
             self.driver = webdriver.Chrome(options=options)
-
+        self.driver.switch_to.new_window('tab')
         self.CHECK_DICT = {
             By.ID: 'return document.getElementById',
             By.CLASS_NAME: 'return document.getElementsByClassName',
@@ -72,7 +72,7 @@ class Browser:
         except:
             return False
 
-    def wait_element(self, by: By, value: str, max_wait: int, by_driver: bool=False) -> bool:
+    def wait_element(self, by: By, value: str, max_wait: int=10, by_driver: bool=False) -> bool:
         """ Ждет, пока на странице не появится указанный элемент
         :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
         :param value: значение элемента, который ожидается
