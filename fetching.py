@@ -33,7 +33,6 @@ class Fetcher:
                 'https://www.bomtoon.com': self.bomtoon,
                 'https://www.comico.kr': self.comico,
                 'https://pocket.shonenmagazine.com': self.shonenmagazine,
-                'https://webtoon.kakao.com': self.webtoon_kakao
             }
         }
 
@@ -61,7 +60,7 @@ class Fetcher:
             if key in url:
                 return await arr[key](url) if not browser else arr[key](url)
         else:
-            return '-'
+            return 'url error'
 
     @log
     def start_browser(self, user: bool=True, full_load: bool=False) -> None:
@@ -122,7 +121,7 @@ class Fetcher:
         if self.get_and_wait(url, 'css-14gr98z'):
             script = "return document.getElementsByClassName('text-ellipsis css-1mn7vax')[0].textContent;"
             num = self.driver.execute(script, tries=20)
-            return self.hyperlink(url, num[:num.index('화')].split()[-1])
+            return self.hyperlink(url, num[:num.index('화')][-3:].strip())
         return self.hyperlink(url, '-')
 
     @log
@@ -132,6 +131,7 @@ class Fetcher:
         if self.get_and_wait(url, 'volumeList', by=By.ID):
             script = "return document.getElementById('volumeList').firstChild.getElementsByTagName('strong')[0].textContent;"
             if res := self.driver.execute(script):
+                res = res[:res.rfind('(')]
                 res = ''.join([el for el in res.split('.')[0].split()[-1] if el.isdigit()])
                 return self.hyperlink(url, res)
         return self.hyperlink(url, '-')
@@ -255,7 +255,7 @@ class Fetcher:
             self.driver.execute('window.stop();')
             parent = self.driver.driver.current_window_handle
             self.driver.execute("document.getElementsByClassName('css-1urq0jq')[0].lastChild.click();")
-            time.sleep(3)
+            time.sleep(5)
             if len(self.driver.driver.window_handles) == 2:
                 return None
             # Переключимся на окно авторизации
