@@ -24,13 +24,19 @@ async def fill_original() -> None:
     fetcher.start_browser()
     try:
         sheeter = Sheet()
-        urls = sheeter.get_values('B4:B1000')
+        urls = sheeter.get_values('B4:B1000')[0]
         # Словарь с номерами глав, полученных без браузера
-        original_dict = dict(await asyncio.gather(*[fetch(fetcher, url) for url in enumerate(urls[0])]))
+        original_dict = dict(await asyncio.gather(*[fetch(fetcher, url) for url in enumerate(urls)]))
         # Словарь с номерами глав, полученных через браузер
-        br_original = await asyncio.gather(*[fetch(fetcher, url, browser=True) for url in enumerate(urls[0])])
+        br_original = await asyncio.gather(*[fetch(fetcher, url, browser=True) for url in enumerate(urls)])
         # Полный словарь
-        original_dict.update(dict(filter(lambda x: x[1] != 'URL error', br_original)))
+        original_dict.update(dict(filter(lambda x: x[1] != 'url error', br_original)))
+        fetcher.shutdown_browser()
+
+        webtoon_urls = [el for el in enumerate(urls) if el[1].startswith('https://webtoon.kakao.com')]
+        webtoon_dict = {el[0]: fetcher.webtoon_kakao(el[1]) for el in webtoon_urls}
+        original_dict.update(webtoon_dict)
+
         sheeter.write_values([[original_dict[k] for k in sorted(original_dict.keys())]], RANGES['original'])
     finally:
         fetcher.shutdown_browser()
