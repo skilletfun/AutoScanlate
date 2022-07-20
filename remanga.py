@@ -74,9 +74,11 @@ def main():
                 # Возвращает кусок текста, по которому точно можно сказать, платная или бесплатная глава
                 el = child.find_element(By.CSS_SELECTOR, 'div:nth-child(3)').get_attribute('innerHTML')[2:5]
                 # Дата главы
-                date = child.find_element(By.CSS_SELECTOR, 'a > div > span:nth-child(2)').get_attribute('innerHTML')
+                if date == '-':
+                    date = child.find_element(By.CSS_SELECTOR, 'a > div > span:nth-child(2)').get_attribute('innerHTML')
                 # Номер главы
                 num = child.find_element(By.CSS_SELECTOR, 'a > h6').text.split()[1]
+
                 if el.startswith('v'):
                     total_payed += 1
                     if payed == '-': payed = f'=ГИПЕРССЫЛКА("{url}";"{num}")'
