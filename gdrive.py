@@ -5,8 +5,9 @@ import httplib2
 from aiogoogle import Aiogoogle
 from aiogoogle.auth.creds import ServiceAccountCreds
 
-from sheet import Sheet
 from logger import log
+from sheet import Sheet
+from bot.updates import Updater
 from config import RANGES, DRIVE_FETCH_LIMIT
 
 
@@ -93,11 +94,14 @@ class Drive:
 
 @log
 async def main():
-    sheeter = Sheet()
     drive = Drive()
+    sheeter = Sheet()
+    updater = Updater('ROWS')
+    await updater.set_initial_state('drive')
     names = sheeter.get_names_with_genres()
     await drive.get_creds()
     drive_list = await drive.parse(names)
+    await updater.set_final_state(drive_list)
     sheeter.write_values(drive_list, RANGES['drive'], dimension='ROWS')
 
 
