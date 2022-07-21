@@ -1,6 +1,7 @@
 import httplib2
 import googleapiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
+
 from config import SHEET_ID, RANGES
 
 
@@ -14,15 +15,16 @@ class Sheet:
         httpAuth = credentials.authorize(httplib2.Http())
         self.service = googleapiclient.discovery.build('sheets', 'v4', http=httpAuth)
 
-    def get_values(self, out_range: str) -> list[list[str], ...]:
+    def get_values(self, out_range: str, dimension:str='COLUMNS') -> list[list[str], ...]:
         """ Возвращает данные из таблицы
         :param out_range: диапазон данных
+        :param dimension: брать по столбцам или строкам
         :return: данные из таблицы
         """
         urls = self.service.spreadsheets().values().get(
             spreadsheetId=SHEET_ID,
             range=out_range,
-            majorDimension='COLUMNS'
+            majorDimension=dimension
         ).execute()
         return urls['values']
 
