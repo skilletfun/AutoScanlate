@@ -262,10 +262,13 @@ class Fetcher:
             handle = self.driver.driver.window_handles[-1]
             self.driver.driver.switch_to.window(handle)
             self.driver.wait_element(By.ID, 'id_email_2', max_wait=15)
-            time.sleep(3)
+            time.sleep(10)
             self.driver.send_keys_to(By.ID, 'id_email_2', ACCOUNTS['kakao'][0])
             self.driver.send_keys_to(By.ID, 'id_password_3', ACCOUNTS['kakao'][1])
-            self.driver.execute("document.getElementById('staySignedIn').click();")
+            try:
+                self.driver.execute("document.getElementById('staySignedIn').click();")
+            except:
+                pass
             time.sleep(0.5)
             self.driver.execute("document.getElementsByClassName('btn_confirm submit btn_g')[0].click();")
             time.sleep(5)
