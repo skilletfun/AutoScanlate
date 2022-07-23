@@ -233,10 +233,10 @@ class Fetcher:
                 num = 'NEED LOGIN'
             else:
                 self.driver.wait_element(By.CLASS_NAME, 'list_product', 10, by_driver=True)
-                num = len(bs(self.driver.get_source(), 'lxml').find('ul', {'class': 'list_product'}).findAll('li'))
+                num = self.format_number(self.driver.driver.find_elements(By.CLASS_NAME, 'tit_episode')[-1].text)
         else:
             self.driver.wait_element(By.CLASS_NAME, 'list_product', 10, by_driver=True)
-            num = len(bs(self.driver.get_source(), 'lxml').find('ul', {'class': 'list_product'}).findAll('li'))
+            num = self.format_number(self.driver.driver.find_elements(By.CLASS_NAME, 'tit_episode')[-1].text)
         return self.hyperlink(url, num)
 
     @log
