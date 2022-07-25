@@ -6,7 +6,6 @@ import aiovk
 
 from logger import log
 from sheet import Sheet
-from bot.updates import Updater
 from config import RANGES, VK_API_TOKEN
 
 
@@ -18,8 +17,6 @@ async def fill_vk():
     """
     payed, free = '-', '-'
     sheeter = Sheet()
-    updater = Updater('ROWS')
-    await updater.set_initial_state('vk')
     urls = sheeter.get_values('E4:E1000')[0]
     group_id = urls[0].split('-')[1].split('_')[0]
     topics = [el.split('-')[1].split('_')[1] for el in urls]
@@ -47,7 +44,6 @@ async def fill_vk():
                 payed, free = '-', '-'
             time_flag = 0.35 - time() - time_flag       # Оганичение на 3 запроса к ВК АПИ в секунду
             sleep(time_flag if time_flag > 0 else 0)    # Если не прошло 0.35 секунд (0.35 * 3 > 1 секунды), то пауза
-    await updater.set_final_state(result_arr)
     sheeter.write_values(result_arr, RANGES['vk'], dimension='ROWS')
 
 
