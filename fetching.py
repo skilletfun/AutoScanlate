@@ -263,6 +263,8 @@ class Fetcher:
             self.driver.driver.switch_to.window(handle)
             self.driver.wait_element(By.ID, 'id_email_2', max_wait=15)
             time.sleep(10)
+            self.driver.driver.find_element(By.ID, 'id_email_2').clear()
+            self.driver.driver.find_element(By.ID, 'id_password_3').clear()
             self.driver.send_keys_to(By.ID, 'id_email_2', ACCOUNTS['kakao'][0])
             self.driver.send_keys_to(By.ID, 'id_password_3', ACCOUNTS['kakao'][1])
             try:
