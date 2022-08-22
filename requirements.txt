@@ -1,0 +1,9 @@
+aiovk
+bs4
+lxml
+selenium
+aiohttp
+httplib2
+google-api-python-client
+oauth2client
+aiogoogle

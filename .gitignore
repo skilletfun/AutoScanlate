@@ -1,0 +1,7 @@
+.gitignore
+README
+chromedriver.exe
+creds.json
+logfile.log
+main.spec
+.idea
