@@ -1,7 +1,7 @@
 # Аккаунты, которые будут использоваться в работе
 ACCOUNTS = {
     'remanga': ('login', 'pass'),
-    'kakao': ('', ''),
+    'kakao': ('login', 'pass'),
     'ridibooks': ('login', 'pass')
 }
 
@@ -26,6 +26,11 @@ SHEET_ID = ''
 
 # Максимальное количество запросов к диску в секунду
 DRIVE_FETCH_LIMIT = 30
+DRIVE_SCOPES = {
+    'folder1': 'id1',
+    'folder2': 'id2',
+    'folder3': 'id3'
+}
 
 # Кастомные заголовки
 HEADERS = {

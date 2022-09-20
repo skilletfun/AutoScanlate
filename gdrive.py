@@ -7,17 +7,13 @@ from aiogoogle.auth.creds import ServiceAccountCreds
 
 from logger import log
 from sheet import Sheet
-from config import RANGES, DRIVE_FETCH_LIMIT
+from config import RANGES, DRIVE_FETCH_LIMIT, DRIVE_SCOPES
 
 
 class Drive:
     """ Парсер для гугл-диска. """
 
     CREDENTIALS_FILE = 'creds.json'
-    SCOPES = {
-        'Сёдзе': '1pYp-eYB1HDhKgMB8EjQ_xCH_EaNFe5-62zlPRoGvH_AXmnMVXqyrz4u5sLLsNnjhL0wnut5j',
-        'Сёнэн': '1GQNgefS6_YXrvPRzBCcKlpHHR9Jrmr019rFZHzO6NAm_LyA9IC-g1ZCmpyfXqCnQG0NO3-Hv'
-    }
     TYPES = ['Перевод', 'Редакт', 'Клин', 'Тайп', 'Эдит', 'Звуки', 'Бета', 'Сканы']
 
     async def get_creds(self):
@@ -42,7 +38,7 @@ class Drive:
         :return: список со строками (ROWS) для гугл-таблицы
         """
         service = await aiog.discover("drive", "v3")
-        q_parent = f"mimeType = 'application/vnd.google-apps.folder' and name contains '{title}' and '{self.SCOPES[genre]}' in parents"
+        q_parent = f"mimeType = 'application/vnd.google-apps.folder' and name contains '{title}' and '{DRIVE_SCOPES[genre]}' in parents"
         # Возвращает id папки с тайтлом
         parent = (await aiog.as_service_account(service.files.list(fields="files(id)", q=q_parent)))['files']
         if len(parent) > 0: parent = parent[0]['id']    # Если тайтла не нашлось, то возвращаем прочерки

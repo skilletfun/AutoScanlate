@@ -153,7 +153,7 @@ class Fetcher:
     @log
     async def mechacomic(self, url: str) -> str:
         res = bs(await self.async_get_response(url), 'lxml').find('div', {'class': 'p-search_chapterNo'})
-        return self.hyperlink(url, res.findAll('div', {'class', 'u-inlineBlock'})[-1].getText().strip()[1:-2])
+        return self.hyperlink(url, res.findAll('div', {'class', 'u-inlineBlock'})[-1].getText().strip()[1:-2]) if res else '-'
 
     @log
     async def futabanet(self, url: str) -> str:
