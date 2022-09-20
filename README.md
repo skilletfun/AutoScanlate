@@ -10,7 +10,7 @@
 Для использования всего функционала программы вам потребуется:
 - сервисный аккаунт гугл
 - браузер на движке Chromium
-- [chromedriver](https://chromedriver.chromium.org/) под вашу версию браузера, ([узнать](chrome://version/) свою версию)
+- [chromedriver](https://chromedriver.chromium.org/) под вашу версию браузера, узнать свою версию chrome://version/ 
 - аккаунт Реманги (внести в `config.py` и залогиниться в браузере)
 - заполнить `config.py` необходимыми данными
 
