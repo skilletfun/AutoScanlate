@@ -5,4 +5,4 @@ creds.json
 logfile.log
 main.spec
 .idea
-__pycahce__
+__pycache__
