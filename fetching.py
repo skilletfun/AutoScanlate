@@ -268,7 +268,7 @@ class Fetcher:
             # Переключимся на окно авторизации
             handle = self.driver.driver.window_handles[-1]
             self.driver.driver.switch_to.window(handle)
-            self.driver.wait_element(By.ID, 'id_email_2', max_wait=15)
+            self.driver.wait_element(By.ID, 'input-loginKey', max_wait=15)
             time.sleep(10)
             self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.CONTROL, 'a')
             self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.DELETE)
