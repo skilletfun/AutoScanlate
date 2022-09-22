@@ -279,11 +279,11 @@ class Fetcher:
                 self.driver.send_keys_to(By.ID, KAKAO_LOGIN_FIELDS_ID['login'], ACCOUNTS['kakao'][0])
                 self.driver.send_keys_to(By.ID, KAKAO_LOGIN_FIELDS_ID['password'], ACCOUNTS['kakao'][1])
             try:
-                self.driver.execute("document.getElementsByClassName('ico_check')[0].click();")
+                self.driver.execute(f"document.getElementsByClassName('{KAKAO_LOGIN_FIELDS_ID['staySigned']}')[0].click();")
             except:
                 pass
             time.sleep(0.5)
-            self.driver.execute("document.getElementsByClassName('btn_g highlight')[0].click();")
+            self.driver.execute(f"document.getElementsByClassName('{KAKAO_LOGIN_FIELDS_ID['buttonLogin']}')[0].click();")
             time.sleep(5)
             self.driver.driver.switch_to.window(parent)
 
