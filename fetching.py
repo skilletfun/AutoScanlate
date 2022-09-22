@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 from logger import log
-from config import HEADERS, ACCOUNTS
+from config import HEADERS, ACCOUNTS, KAKAO_LOGIN_FILEDS_ID
 
 
 class Fetcher:
@@ -268,16 +268,16 @@ class Fetcher:
             # Переключимся на окно авторизации
             handle = self.driver.driver.window_handles[-1]
             self.driver.driver.switch_to.window(handle)
-            self.driver.wait_element(By.ID, 'input-loginKey', max_wait=15, by_driver=True)
+            self.driver.wait_element(By.ID, KAKAO_LOGIN_FILEDS_ID['login'], max_wait=15, by_driver=True)
             time.sleep(5)
-            if not self.driver.execute("return document.getElementById('input-loginKey').innerHTML;") \
-                and not self.driver.execute("return document.getElementById('input-password').innerHTML;"):
-                self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.CONTROL, 'a')
-                self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.DELETE)
-                self.driver.driver.find_element(By.ID, 'input-password').send_keys(Keys.CONTROL, 'a')
-                self.driver.driver.find_element(By.ID, 'input-password').send_keys(Keys.DELETE)
-                self.driver.send_keys_to(By.ID, 'input-loginKey', ACCOUNTS['kakao'][0])
-                self.driver.send_keys_to(By.ID, 'input-password', ACCOUNTS['kakao'][1])
+            if not self.driver.execute(f"return document.getElementById('{KAKAO_LOGIN_FILEDS_ID['login']}').innerHTML;") \
+                and not self.driver.execute(f"return document.getElementById('{KAKAO_LOGIN_FILEDS_ID['password']}').innerHTML;"):
+                self.driver.driver.find_element(By.ID, KAKAO_LOGIN_FILEDS_ID['login']).send_keys(Keys.CONTROL, 'a')
+                self.driver.driver.find_element(By.ID, KAKAO_LOGIN_FILEDS_ID['login']).send_keys(Keys.DELETE)
+                self.driver.driver.find_element(By.ID, KAKAO_LOGIN_FILEDS_ID['password']).send_keys(Keys.CONTROL, 'a')
+                self.driver.driver.find_element(By.ID, KAKAO_LOGIN_FILEDS_ID['password']).send_keys(Keys.DELETE)
+                self.driver.send_keys_to(By.ID, KAKAO_LOGIN_FILEDS_ID['login'], ACCOUNTS['kakao'][0])
+                self.driver.send_keys_to(By.ID, KAKAO_LOGIN_FILEDS_ID['password'], ACCOUNTS['kakao'][1])
             try:
                 self.driver.execute("document.getElementsByClassName('ico_check')[0].click();")
             except:

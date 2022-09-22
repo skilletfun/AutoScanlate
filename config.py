@@ -34,6 +34,12 @@ DRIVE_SCOPES = {
     'folder3': 'id3'
 }
 
+# ID полей окна авторизации Kakao
+KAKAO_LOGIN_FILEDS_ID = {
+    'login': 'id_email_2', # новый - input-loginKey
+    'password': 'id_password_3' # новый - input-password
+}
+
 # Кастомные заголовки
 HEADERS = {
     "Connection": "keep-alive",
