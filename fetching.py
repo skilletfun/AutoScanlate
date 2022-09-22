@@ -269,13 +269,15 @@ class Fetcher:
             handle = self.driver.driver.window_handles[-1]
             self.driver.driver.switch_to.window(handle)
             self.driver.wait_element(By.ID, 'input-loginKey', max_wait=15)
-            time.sleep(10)
-            self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.CONTROL, 'a')
-            self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.DELETE)
-            self.driver.driver.find_element(By.ID, 'input-password').send_keys(Keys.CONTROL, 'a')
-            self.driver.driver.find_element(By.ID, 'input-password').send_keys(Keys.DELETE)
-            self.driver.send_keys_to(By.ID, 'input-loginKey', ACCOUNTS['kakao'][0])
-            self.driver.send_keys_to(By.ID, 'input-password', ACCOUNTS['kakao'][1])
+            time.sleep(5)
+            if not self.driver.execute("return document.getElementById('input-loginKey').innerHTML") \
+                and not self.driver.execute("return document.getElementById('input-password').innerHTML"):
+                self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.CONTROL, 'a')
+                self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.DELETE)
+                self.driver.driver.find_element(By.ID, 'input-password').send_keys(Keys.CONTROL, 'a')
+                self.driver.driver.find_element(By.ID, 'input-password').send_keys(Keys.DELETE)
+                self.driver.send_keys_to(By.ID, 'input-loginKey', ACCOUNTS['kakao'][0])
+                self.driver.send_keys_to(By.ID, 'input-password', ACCOUNTS['kakao'][1])
             try:
                 self.driver.execute("document.getElementsByClassName('ico_check')[0].click();")
             except:
