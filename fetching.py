@@ -118,9 +118,16 @@ class Fetcher:
 
     @log
     def kakao(self, url: str) -> str:
-        if self.get_and_wait(url, 'css-14gr98z'):
-            script = "return document.getElementsByClassName('text-ellipsis css-1mn7vax')[0].textContent;"
-            num = self.driver.execute(script, tries=20)
+        if self.get_and_wait(url, 'css-1imdls4-Text-BelowTabSelectBox'):
+            time.sleep(0.5)
+            self.driver.execute('document.getElementsByClassName("css-1imdls4-Text-BelowTabSelectBox")[0].click();')
+            time.sleep(0.5)
+            self.driver.execute('document.getElementsByClassName("css-169255i-DialogCheckButton")[1].click();')
+            time.sleep(1)
+        if self.driver.wait_element(By.CLASS_NAME, 'css-121idz6-SingleListViewItem'):
+            script = "return document.getElementsByClassName('css-121idz6-SingleListViewItem')[0].getAttribute('data-t-obj');"
+            num_str = self.driver.execute(script, tries=20)
+            num = json.loads(num_str)['eventMeta']['name']
             return self.hyperlink(url, num[:num.index('화')][-3:].strip())
         return self.hyperlink(url, '-')
 
@@ -250,11 +257,11 @@ class Fetcher:
     @log
     def login_kakao(self) -> None:
         self.driver.get('https://page.kakao.com/main')
-        if self.driver.wait_element(By.CLASS_NAME, 'css-1urq0jq', 15):
+        if self.driver.wait_element(By.CLASS_NAME, 'css-dqete9-Icon-PcHeader', 15):
             time.sleep(10)
             self.driver.execute('window.stop();')
             parent = self.driver.driver.current_window_handle
-            self.driver.execute("document.getElementsByClassName('css-1urq0jq')[0].lastChild.click();")
+            self.driver.execute("document.getElementsByClassName('css-dqete9-Icon-PcHeader')[0].click();")
             time.sleep(5)
             if len(self.driver.driver.window_handles) == 2:
                 return None
@@ -263,18 +270,18 @@ class Fetcher:
             self.driver.driver.switch_to.window(handle)
             self.driver.wait_element(By.ID, 'id_email_2', max_wait=15)
             time.sleep(10)
-            self.driver.driver.find_element(By.ID, 'id_email_2').send_keys(Keys.CONTROL, 'a')
-            self.driver.driver.find_element(By.ID, 'id_email_2').send_keys(Keys.DELETE)
-            self.driver.driver.find_element(By.ID, 'id_password_3').send_keys(Keys.CONTROL, 'a')
-            self.driver.driver.find_element(By.ID, 'id_password_3').send_keys(Keys.DELETE)
-            self.driver.send_keys_to(By.ID, 'id_email_2', ACCOUNTS['kakao'][0])
-            self.driver.send_keys_to(By.ID, 'id_password_3', ACCOUNTS['kakao'][1])
+            self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.CONTROL, 'a')
+            self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.DELETE)
+            self.driver.driver.find_element(By.ID, 'input-password').send_keys(Keys.CONTROL, 'a')
+            self.driver.driver.find_element(By.ID, 'input-password').send_keys(Keys.DELETE)
+            self.driver.send_keys_to(By.ID, 'input-loginKey', ACCOUNTS['kakao'][0])
+            self.driver.send_keys_to(By.ID, 'input-password', ACCOUNTS['kakao'][1])
             try:
-                self.driver.execute("document.getElementById('staySignedIn').click();")
+                self.driver.execute("document.getElementsByClassName('ico_check')[0].click();")
             except:
                 pass
             time.sleep(0.5)
-            self.driver.execute("document.getElementsByClassName('btn_confirm submit btn_g')[0].click();")
+            self.driver.execute("document.getElementsByClassName('btn_g highlight')[0].click();")
             time.sleep(5)
             self.driver.driver.switch_to.window(parent)
 
