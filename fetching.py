@@ -139,7 +139,7 @@ class Fetcher:
             script = "return document.getElementById('volumeList').firstChild.getElementsByTagName('strong')[0].textContent;"
             if res := self.driver.execute(script):
                 res = res[:res.rfind('(')]
-                res = ''.join([el for el in res.split('.')[0].split()[-1] if el.isdigit()])
+                res = ''.join([el for el in res.split('.')[0].split('-')[0].split()[-1] if el.isdigit()])
                 return self.hyperlink(url, res)
         return self.hyperlink(url, '-')
 
