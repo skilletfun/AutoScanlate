@@ -268,10 +268,10 @@ class Fetcher:
             # Переключимся на окно авторизации
             handle = self.driver.driver.window_handles[-1]
             self.driver.driver.switch_to.window(handle)
-            self.driver.wait_element(By.ID, 'input-loginKey', max_wait=15)
+            self.driver.wait_element(By.ID, 'input-loginKey', max_wait=15, by_driver=True)
             time.sleep(5)
-            if not self.driver.execute("return document.getElementById('input-loginKey').innerHTML") \
-                and not self.driver.execute("return document.getElementById('input-password').innerHTML"):
+            if not self.driver.execute("return document.getElementById('input-loginKey').innerHTML;") \
+                and not self.driver.execute("return document.getElementById('input-password').innerHTML;"):
                 self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.CONTROL, 'a')
                 self.driver.driver.find_element(By.ID, 'input-loginKey').send_keys(Keys.DELETE)
                 self.driver.driver.find_element(By.ID, 'input-password').send_keys(Keys.CONTROL, 'a')
