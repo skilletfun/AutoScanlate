@@ -35,7 +35,7 @@ DRIVE_SCOPES = {
 }
 
 # ID полей окна авторизации Kakao
-KAKAO_LOGIN_FILEDS_ID = {
+KAKAO_LOGIN_FIELDS_ID = {
     'login': 'id_email_2', # новый - input-loginKey
     'password': 'id_password_3' # новый - input-password
 }
