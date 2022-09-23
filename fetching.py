@@ -119,9 +119,9 @@ class Fetcher:
     @log
     def kakao(self, url: str) -> str:
         if self.get_and_wait(url, 'css-1imdls4-Text-BelowTabSelectBox'):
-            time.sleep(0.5)
+            time.sleep(1)
             self.driver.execute('document.getElementsByClassName("css-1imdls4-Text-BelowTabSelectBox")[0].click();')
-            time.sleep(0.5)
+            time.sleep(1)
             self.driver.execute('document.getElementsByClassName("css-169255i-DialogCheckButton")[1].click();')
             time.sleep(1)
         if self.driver.wait_element(By.CLASS_NAME, 'css-121idz6-SingleListViewItem'):
