@@ -21,7 +21,7 @@ async def fetch(fetcher: Fetcher, url: str, browser: bool=False) -> (int, Union[
 async def fill_original() -> None:
     """ Заполнение столбца Оригинал """
     fetcher = Fetcher()
-    fetcher.start_browser()
+    fetcher.start_browser(full_load=True)
     try:
         sheeter = Sheet()
         urls = sheeter.get_values('B4:B1000')[0]
