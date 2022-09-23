@@ -18,6 +18,9 @@ class Fetcher:
         self.driver: Browser = None
         self.tries = 5
         self.sem = asyncio.Semaphore(5)
+
+        # requests - значит запрос будет через эту библиотеку
+        # browser - значит нужно рендерить js, поэтому запрос будет через браузер
         self.sites = {
             'requests': {
                 'https://seiga.nicovideo.jp': self.seiga_nicovideo,
@@ -112,7 +115,7 @@ class Fetcher:
         return self.driver.wait_element(by, key, max_wait)
 
     @staticmethod
-    def format_number(num: str):
+    def format_number(num: str) -> str:
         result = ''.join([el if el.isdigit() else ' ' for el in num])
         return '.'.join(result.split()) if result else '-'
 
@@ -209,7 +212,7 @@ class Fetcher:
         return self.hyperlink(url, num)
 
     @log
-    def webtoon_kakao(self, url):
+    def webtoon_kakao(self, url: str) -> str:
         import webtoon_kakao
         return webtoon_kakao.main(url)
 
