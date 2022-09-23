@@ -1,5 +1,4 @@
 import time
-
 from typing import Any
 
 from selenium import webdriver
@@ -31,22 +30,23 @@ class Browser:
             self.driver = webdriver.Chrome(options=options, desired_capabilities=capa)
         else:
             self.driver = webdriver.Chrome(options=options)
-        self.driver.switch_to.new_window('tab')
+
         self.CHECK_DICT = {
             By.ID: 'return document.getElementById',
             By.CLASS_NAME: 'return document.getElementsByClassName',
             By.TAG_NAME: 'return document.getElementsByTagName',
         }
+        self.driver.switch_to.new_window('tab')
 
     def get(self, url: str) -> None:
         """ Загружает страницу. """
         self.driver.get(url)
 
     def execute(self, script: str, tries: int=5, sleep: float=0.5) -> Any:
-        """ Выполняет js-скрипт в браузере и ждет после этого указанное время
+        """ Выполняет js-скрипт в браузере
         :param script: скрипт
-        :param sleep: время ожидания
         :param tries: количество попыток
+        :param sleep: время ожидания перед новой попыткой
         :return: результат выполнения
         """
         while tries > 0:
@@ -92,7 +92,7 @@ class Browser:
     def get_source(self) -> str:
         return self.driver.page_source
 
-    def send_keys_to(self, by, key, value) -> None:
+    def send_keys_to(self, by: By, key: str, value: str) -> None:
         """ Посылает элементу на странице указанное значение.
         :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
         :param key: значение элемента, которому шлется value
