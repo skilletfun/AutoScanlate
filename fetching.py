@@ -1,7 +1,7 @@
 import time
 import json
 import asyncio
-from typing import Union, Any
+from typing import Union, Any, List
 
 import aiohttp
 from bs4 import BeautifulSoup as bs
@@ -41,7 +41,7 @@ class Fetcher:
         }
 
     @log
-    def get_by_keys(self, dictionary: str, keys: list[str]) -> Any:
+    def get_by_keys(self, dictionary: str, keys: List[str]) -> Any:
         """ Принимает на вход словарь и проходит вглубь по ключам
         :param dictionary: словарь, по которому происходит итерация
         :param keys: список ключей
@@ -126,12 +126,11 @@ class Fetcher:
             self.driver.execute('document.getElementsByClassName("css-1imdls4-Text-BelowTabSelectBox")[0].click();')
             time.sleep(1)
             self.driver.execute('document.getElementsByClassName("css-169255i-DialogCheckButton")[1].click();')
-            time.sleep(1)
+            time.sleep(3)
         if self.driver.wait_element(By.CLASS_NAME, 'css-121idz6-SingleListViewItem'):
-            script = "return document.getElementsByClassName('css-121idz6-SingleListViewItem')[0].getAttribute('data-t-obj');"
-            num_str = self.driver.execute(script, tries=20)
-            num = json.loads(num_str)['eventMeta']['name']
-            return self.hyperlink(url, num[:num.index('화')][-3:].strip())
+            script = "return document.getElementsByClassName('css-m4uhtd-Text-SingleListViewItem')[0].textContent;"
+            num_str = self.driver.execute(script)
+            return self.hyperlink(url, num_str[:num_str.index('화')][-3:].strip())
         return self.hyperlink(url, '-')
 
     @log
