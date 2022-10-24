@@ -1,4 +1,5 @@
 import time
+from typing import Tuple
 
 from selenium.webdriver.common.by import By
 
@@ -24,7 +25,7 @@ def login_remanga(driver: Browser) -> None:
     time.sleep(5)
 
 @log
-def wait(driver: Browser) -> (str, list):
+def wait(driver: Browser) -> Tuple(str, list):
     """ Загружает страницу, пока не появятся необходимые элементы.
     :param driver: объект браузера
     :return: возвращает данные для столбца Реклама и список глав
