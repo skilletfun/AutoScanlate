@@ -122,12 +122,13 @@ class Fetcher:
     @log
     def kakao(self, url: str) -> str:
         if self.get_and_wait(url, 'css-1imdls4-Text-BelowTabSelectBox'):
-            time.sleep(1)
+            time.sleep(3)
             self.driver.execute('document.getElementsByClassName("css-1imdls4-Text-BelowTabSelectBox")[0].click();')
             time.sleep(1)
             self.driver.execute('document.getElementsByClassName("css-169255i-DialogCheckButton")[1].click();')
             time.sleep(3)
         if self.driver.wait_element(By.CLASS_NAME, 'css-m4uhtd-Text-SingleListViewItem'):
+            time.sleep(3)
             script = "return document.getElementsByClassName('css-m4uhtd-Text-SingleListViewItem')[0].textContent;"
             num_str = self.driver.execute(script)
             return self.hyperlink(url, num_str[:num_str.index('화')][-3:].strip())
@@ -177,12 +178,20 @@ class Fetcher:
 
     @log
     async def tappytoon(self, url: str) -> str:
-        res = bs(await self.async_get_response(url), 'lxml').find('script', {'id': '__NEXT_DATA__'})
-        arr = self.get_by_keys(res.text, ['props', 'initialState', 'entities', 'chapters'])
-        arr = [arr[key] for key in arr.keys()]
-        for el in sorted(arr, key=lambda x: x['order'])[::-1]:
-            if el['isPublished']:
-                return self.hyperlink(url, el['order'])
+        self.driver.get(url)
+        time.sleep(5)
+        length = 0
+        script = "return document.getElementsByClassName('css-901oao css-vcwn7f r-i1xj32 r-1wbh5a2 r-1qhq223 r-1o4mh9l r-adoza8 r-1kyvuxt r-dnmrzs r-1ez4vuq r-1iln25a');"
+        arr = self.driver.execute(script)
+        while length != len(arr):
+            self.driver.driver.execute_script('arguments[0].scrollIntoView()', arr[-1])
+            time.sleep(3)
+            arr = self.driver.execute(script)
+        arr = self.driver.execute("return document.getElementsByClassName('css-1dbjc4n r-14lw9ot r-1loqt21 r-18u37iz r-ymttw5 r-1otgn73');")
+        script = "return arguments[0].getElementsByClassName('r-1777fci')[1].getElementsByClassName('css-901oao')[1].textContent"
+        if self.driver.driver.execute_script(script, arr[-1]).startswith('View'):
+            num = self.driver.driver.execute_script(script, arr[-2]).split()[1]
+        return self.hyperlink(url, num)
 
     @log
     def bilibili(self, url: str) -> str:
@@ -219,10 +228,9 @@ class Fetcher:
     def ridibooks(self, url: str) -> str:
         self.driver.get(url)
         time.sleep(3)
-        if self.driver.driver.current_url.startswith('https://ridibooks.com/account/login?'):
+        if self.driver.driver.current_url.startswith('https://ridibooks.com/account/login'):
             self.login_ridibooks()
-            time.sleep(5)
-            self.driver.get(url)
+            time.sleep(10)
         if self.driver.wait_element(By.CLASS_NAME, 'book_count', 10):
             # Сколько всего глав на странице
             num = int(self.driver.driver.find_element(By.CLASS_NAME, 'book_count').text.split()[1][:-1])
