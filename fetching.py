@@ -26,10 +26,10 @@ class Fetcher:
                 'https://seiga.nicovideo.jp': self.seiga_nicovideo,
                 'https://web-ace.jp': self.web_ace,
                 'https://gaugau.futabanet.jp': self.futabanet,
-                'https://mechacomic.jp': self.mechacomic,
-                'https://www.tappytoon.com': self.tappytoon
+                'https://mechacomic.jp': self.mechacomic
             },
             'browser': {
+                'https://www.tappytoon.com': self.tappytoon,
                 'https://series.naver.com': self.series_naver,
                 'https://page.kakao.com': self.kakao,
                 'https://ridibooks.com': self.ridibooks,
