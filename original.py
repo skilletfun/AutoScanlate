@@ -1,5 +1,5 @@
 import asyncio
-from typing import Union
+from typing import Union, Tuple
 
 from logger import log
 from sheet import Sheet
@@ -7,7 +7,7 @@ from config import RANGES
 from fetching import Fetcher
 
 
-async def fetch(fetcher: Fetcher, url: str, browser: bool=False) -> (int, Union[int, str]):
+async def fetch(fetcher: Fetcher, url: str, browser: bool=False) -> Tuple[int, Union[int, str]]:
     """ Запрашивает страницу и возвращает номер последней главы
     :param fetcher: объект, выполняющий запросы и обработку данных
     :param url: ссылка на главу
