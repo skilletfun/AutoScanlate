@@ -19,7 +19,7 @@ RANGES = {
 VK_API_TOKEN = ''
 
 # Путь до браузерной папки User data
-PATH_TO_BROWSER = ''
+PATH_TO_BROWSER = 'C:\\Users\\user\\AppData\\Local\\Chromium\\User Data\\Default'
 
 # ID таблицы
 SHEET_ID = ''
@@ -36,10 +36,10 @@ DRIVE_SCOPES = {
 
 # ID полей окна авторизации Kakao
 KAKAO_LOGIN_FIELDS_ID = {
-    'login': 'id_email_2',          # новый - input-loginKey
-    'password': 'id_password_3',    # новый - input-password
-    'staySigned': 'staySignedIn',   # новый - ico_check
-    'buttonLogin': 'btn_confirm submit btn_g'   # новый - btn_g highlight
+    'login': 'input-loginKey',       
+    'password': 'input-password',    
+    'staySigned': 'ico_check',   
+    'buttonLogin': 'btn_g highlight'
 }
 
 # Кастомные заголовки
