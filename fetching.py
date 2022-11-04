@@ -47,10 +47,10 @@ class Fetcher:
         :param keys: список ключей
         :return: результат итерации, вернуться может все что угодно
         """
-        dictionary = json.loads(dictionary)
+        js_dictionary = json.loads(dictionary)
         for key in keys:
-            dictionary = dictionary[key]
-        return dictionary
+            js_dictionary = js_dictionary[key]
+        return js_dictionary
 
     @log
     async def fetch(self, url: str, browser: bool=False) -> str:
@@ -122,13 +122,11 @@ class Fetcher:
     @log
     def kakao(self, url: str) -> str:
         if self.get_and_wait(url, 'css-1imdls4-Text-BelowTabSelectBox'):
-            time.sleep(3)
             self.driver.execute('document.getElementsByClassName("css-1imdls4-Text-BelowTabSelectBox")[0].click();')
             time.sleep(1)
             self.driver.execute('document.getElementsByClassName("css-169255i-DialogCheckButton")[1].click();')
-            time.sleep(3)
+            time.sleep(1.5)
         if self.driver.wait_element(By.CLASS_NAME, 'css-m4uhtd-Text-SingleListViewItem'):
-            time.sleep(3)
             script = "return document.getElementsByClassName('css-m4uhtd-Text-SingleListViewItem')[0].textContent;"
             num_str = self.driver.execute(script)
             return self.hyperlink(url, num_str[:num_str.index('화')][-3:].strip())
@@ -136,14 +134,14 @@ class Fetcher:
 
     @log
     def series_naver(self, url: str) -> str:
+        script = "return document.getElementById('volumeList').firstChild.getElementsByTagName('strong')[0].textContent;"
         if 'sortOrder=DESC' not in url:
             url += '&sortOrder=DESC'
-        if self.get_and_wait(url, 'volumeList', by=By.ID):
-            script = "return document.getElementById('volumeList').firstChild.getElementsByTagName('strong')[0].textContent;"
-            if res := self.driver.execute(script):
-                res = res[:res.rfind('(')]
-                res = ''.join([el for el in res.split('.')[0].split('-')[0].split()[-1] if el.isdigit()])
-                return self.hyperlink(url, res)
+        self.driver.get(url)
+        while not ((res := self.driver.execute(script)) is False):
+            res = res[:res.rfind('(')]
+            res = ''.join([el for el in res.split('.')[0].split('-')[0].split()[-1] if el.isdigit()])
+            return self.hyperlink(url, res)
         return self.hyperlink(url, '-')
 
     @log
@@ -181,6 +179,7 @@ class Fetcher:
         self.driver.get(url)
         time.sleep(5)
         length = 0
+        num = '-'
         script = "return document.getElementsByClassName('css-901oao css-vcwn7f r-i1xj32 r-1wbh5a2 r-1qhq223 r-1o4mh9l r-adoza8 r-1kyvuxt r-dnmrzs r-1ez4vuq r-1iln25a');"
         arr = self.driver.execute(script)
         while length != len(arr):
@@ -257,7 +256,7 @@ class Fetcher:
         return self.hyperlink(url, num)
 
     @log
-    def login_comico(self) -> None:
+    def login_comico(self) -> bool:
         s1 = "document.getElementsByClassName('layer_foot')[0].getElementsByTagName('button')[1].click();"
         s2 = "document.getElementsByClassName('btn_kakao')[0].click();"
         self.driver.wait_element(By.CLASS_NAME, 'layer_foot', 15, by_driver=True)
@@ -267,9 +266,7 @@ class Fetcher:
     @log
     def login_kakao(self) -> None:
         self.driver.get('https://page.kakao.com/main')
-        if self.driver.wait_element(By.CLASS_NAME, 'css-dqete9-Icon-PcHeader', 15):
-            time.sleep(10)
-            self.driver.execute('window.stop();')
+        if self.driver.wait_element(By.CLASS_NAME, 'css-dqete9-Icon-PcHeader', 5):
             parent = self.driver.driver.current_window_handle
             self.driver.execute("document.getElementsByClassName('css-dqete9-Icon-PcHeader')[0].click();")
             time.sleep(5)
@@ -288,6 +285,7 @@ class Fetcher:
                 self.driver.driver.find_element(By.ID, KAKAO_LOGIN_FIELDS_ID['password']).send_keys(Keys.DELETE)
                 self.driver.send_keys_to(By.ID, KAKAO_LOGIN_FIELDS_ID['login'], ACCOUNTS['kakao'][0])
                 self.driver.send_keys_to(By.ID, KAKAO_LOGIN_FIELDS_ID['password'], ACCOUNTS['kakao'][1])
+            time.sleep(0.5)
             try:
                 self.driver.execute(f"document.getElementsByClassName('{KAKAO_LOGIN_FIELDS_ID['staySigned']}')[0].click();")
             except:
