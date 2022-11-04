@@ -36,7 +36,7 @@ async def fill_original() -> None:
         webtoon_dict = {el[0]: fetcher.webtoon_kakao(el[1]) for el in webtoon_urls}
         original_dict.update(webtoon_dict)
 
-        sheeter.write_values([[original_dict[k] for k in sorted(original_dict.keys())]], RANGES['original'])
+        sheeter.write_values([[original_dict[k] if type(original_dict[k]) is str else '-' for k in sorted(original_dict.keys())]], RANGES['original'])
     finally:
         fetcher.shutdown_browser()
 
