@@ -5,3 +5,4 @@ main.spec
 .idea
 __pycache__
 env
+settings.json
