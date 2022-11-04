@@ -1,3 +1,5 @@
+from typing import List
+
 import httplib2
 import googleapiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
@@ -11,11 +13,11 @@ class Sheet:
     def __init__(self):
         credentials = ServiceAccountCredentials.from_json_keyfile_name(
             self.CREDENTIALS_FILE,
-            ['https://www.googleapis.com/auth/spreadsheets'])
+            'https://www.googleapis.com/auth/spreadsheets')
         httpAuth = credentials.authorize(httplib2.Http())
         self.service = googleapiclient.discovery.build('sheets', 'v4', http=httpAuth)
 
-    def get_values(self, out_range: str, dimension:str='COLUMNS') -> list[list[str], ...]:
+    def get_values(self, out_range: str, dimension:str='COLUMNS') -> List[List[str]]:
         """ Возвращает данные из таблицы
         :param out_range: диапазон данных
         :param dimension: брать по столбцам или строкам
@@ -28,7 +30,7 @@ class Sheet:
         ).execute()
         return urls['values']
 
-    def get_names_with_genres(self) -> list[list[str], list[str]]:
+    def get_names_with_genres(self) -> List[List[str]]:
         """ Возвращает из таблицы названия тайтлов и их жанр. """
         values = self.service.spreadsheets().values().batchGet(
             spreadsheetId=SHEET_ID,

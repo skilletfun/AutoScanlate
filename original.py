@@ -7,7 +7,7 @@ from config import RANGES
 from fetching import Fetcher
 
 
-async def fetch(fetcher: Fetcher, url: str, browser: bool=False) -> Tuple[int, Union[int, str]]:
+async def fetch(fetcher: Fetcher, url: Tuple[int, str], browser: bool=False) -> Tuple[int, Union[int, str]]:
     """ Запрашивает страницу и возвращает номер последней главы
     :param fetcher: объект, выполняющий запросы и обработку данных
     :param url: ссылка на главу
@@ -31,7 +31,7 @@ async def fill_original() -> None:
         # Полный словарь
         original_dict.update(dict(filter(lambda x: x[1] != 'url error', br_original)))
         fetcher.shutdown_browser()
-
+        
         webtoon_urls = [el for el in enumerate(urls) if el[1].startswith('https://webtoon.kakao.com')]
         webtoon_dict = {el[0]: fetcher.webtoon_kakao(el[1]) for el in webtoon_urls}
         original_dict.update(webtoon_dict)
