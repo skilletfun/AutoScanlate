@@ -103,7 +103,7 @@ class Fetcher:
         """
         return f'=ГИПЕРССЫЛКА("{url}";"{num}")'
 
-    def get_and_wait(self, url: str, key: str, by: By=By.CLASS_NAME, max_wait: int=10) -> bool:
+    def get_and_wait(self, url: str, key: str, by: str=By.CLASS_NAME, max_wait: int=10) -> bool:
         """ Прогружает страницу и ждет до тех пор, пока не появится указанный элемент или не истечен время
         :param url: ссылка на страницу
         :param key: элемент, который ожидается
