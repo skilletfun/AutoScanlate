@@ -5,10 +5,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.webdriver.support import expected_conditions as EC
 
-from config import PATH_TO_BROWSER, ACCOUNTS
+from config import PATH_TO_BROWSER
 
 
 class Browser:
@@ -57,7 +55,7 @@ class Browser:
                 tries -= 1
         return False
 
-    def check_element(self, by: By, value: str, by_driver: bool=False) -> bool:
+    def check_element(self, by: str, value: str, by_driver: bool=False) -> Any:
         """ Проверяет, есть ли на странице элемент
         :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
         :param value: значение для поиска
@@ -72,7 +70,7 @@ class Browser:
         except:
             return False
 
-    def wait_element(self, by: By, value: str, max_wait: int=10, by_driver: bool=False) -> bool:
+    def wait_element(self, by: str, value: str, max_wait: float=10, by_driver: bool=False) -> bool:
         """ Ждет, пока на странице не появится указанный элемент
         :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
         :param value: значение элемента, который ожидается
@@ -92,7 +90,7 @@ class Browser:
     def get_source(self) -> str:
         return self.driver.page_source
 
-    def send_keys_to(self, by: By, key: str, value: str) -> None:
+    def send_keys_to(self, by: str, key: str, value: str) -> None:
         """ Посылает элементу на странице указанное значение.
         :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
         :param key: значение элемента, которому шлется value
