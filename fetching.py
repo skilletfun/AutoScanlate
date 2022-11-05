@@ -15,7 +15,7 @@ from config import HEADERS, ACCOUNTS, KAKAO_LOGIN_FIELDS_ID
 
 class Fetcher:
     def __init__(self):
-        self.driver: Browser = None
+        self.driver: Browser = None # type: ignore
         self.tries = 5
         self.sem = asyncio.Semaphore(5)
 
@@ -29,13 +29,14 @@ class Fetcher:
                 'https://mechacomic.jp': self.mechacomic
             },
             'browser': {
+                'https://www.lezhin.com': self.lezhin,
                 'https://www.tappytoon.com': self.tappytoon,
                 'https://series.naver.com': self.series_naver,
                 'https://page.kakao.com': self.kakao,
                 'https://ridibooks.com': self.ridibooks,
                 'https://manga.bilibili.com': self.bilibili,
                 'https://www.bomtoon.com': self.bomtoon,
-                'https://www.comico.kr': self.comico,
+                'https://www.comico.': self.comico,
                 'https://pocket.shonenmagazine.com': self.shonenmagazine,
             }
         }
@@ -75,7 +76,7 @@ class Fetcher:
         if self.driver:
             self.shutdown_browser()
         self.driver = Browser(user=user, full_load=full_load)
-        self.login_kakao()
+        # self.login_kakao()
 
     @log
     def shutdown_browser(self) -> None:
@@ -154,7 +155,7 @@ class Fetcher:
     @log
     async def web_ace(self, url: str) -> str:
         t_url = url + '/episode/' if url.endswith('/') else url + 'episode/'
-        chapter = bs(await self.async_get_response(t_url), 'lxml').find('ul', {'class': 'table-view'}).find_all('li')[0]
+        chapter = bs(await self.async_get_response(t_url), 'lxml').find('ul', {'class': 'table-view'}).find_all('li')[0] # type: ignore
         num = chapter.find('p', {'class': 'text-bold'}).text
         num = ''.join([el for el in num if el.isdigit() or el == '-']).replace('-', '.')
         return self.hyperlink(url, num)
@@ -162,13 +163,13 @@ class Fetcher:
     @log
     async def mechacomic(self, url: str) -> str:
         res = bs(await self.async_get_response(url), 'lxml').find('div', {'class': 'p-search_chapterNo'})
-        return self.hyperlink(url, res.findAll('div', {'class', 'u-inlineBlock'})[-1].getText().strip()[1:-2]) if res else '-'
+        return self.hyperlink(url, res.findAll('div', {'class', 'u-inlineBlock'})[-1].getText().strip()[1:-2]) if res else '-'  # type: ignore
 
     @log
     async def futabanet(self, url: str) -> str:
         from string import punctuation
         res = bs(await self.async_get_response(url), 'lxml').find('div', {'class': 'detail-ex__btn-item--latest'})
-        res = res.getText().strip().split('\n')[1][1:]
+        res = res.getText().strip().split('\n')[1][1:] # type: ignore
         res = ''.join([(el if el.isdigit() or el in punctuation else '') for el in res])
         if '.' in res:
             res = res[:res.rfind('(')]
@@ -176,21 +177,19 @@ class Fetcher:
         return self.hyperlink(url, ''.join([el if el.isdigit() else check_bracket(el) for el in res]))
 
     @log
-    async def tappytoon(self, url: str) -> str:
+    def tappytoon(self, url: str) -> str:
         self.driver.get(url)
-        time.sleep(5)
-        length = 0
+        self.driver.execute("document.getElementsByClassName('css-901oao r-zdkpiq r-fppytw r-1o4mh9l r-adoza8 r-1kyvuxt r-13hce6t r-q4m81j')[0].click();")
+        time.sleep(3)
         num = '-'
-        script = "return document.getElementsByClassName('css-901oao css-vcwn7f r-i1xj32 r-1wbh5a2 r-1qhq223 r-1o4mh9l r-adoza8 r-1kyvuxt r-dnmrzs r-1ez4vuq r-1iln25a');"
-        arr = self.driver.execute(script)
-        while length != len(arr):
-            self.driver.driver.execute_script('arguments[0].scrollIntoView()', arr[-1])
-            time.sleep(3)
-            arr = self.driver.execute(script)
-        arr = self.driver.execute("return document.getElementsByClassName('css-1dbjc4n r-14lw9ot r-1loqt21 r-18u37iz r-ymttw5 r-1otgn73');")
-        script = "return arguments[0].getElementsByClassName('r-1777fci')[1].getElementsByClassName('css-901oao')[1].textContent"
-        if self.driver.driver.execute_script(script, arr[-1]).startswith('View'):
-            num = self.driver.driver.execute_script(script, arr[-2]).split()[1]
+        script_1 = "return document.getElementsByClassName('css-901oao css-vcwn7f r-i1xj32 r-1wbh5a2 r-1qhq223 r-1o4mh9l r-adoza8 r-1kyvuxt r-dnmrzs r-1ez4vuq r-1iln25a');"
+        script_2 = "return document.getElementsByClassName('css-901oao r-zdkpiq r-1wbh5a2 r-1qhq223 r-1o4mh9l r-adoza8 r-1kyvuxt r-dnmrzs r-1ez4vuq');"
+        for num, check in zip(self.driver.execute(script_1), self.driver.execute(script_2)):
+            num = self.driver.driver.execute_script("return arguments[0].textContent;", num)
+            check = self.driver.driver.execute_script("return arguments[0].textContent;", check)
+            if not check.startswith('View'):
+                num = num.split()[-1]
+                break
         return self.hyperlink(url, num)
 
     @log
@@ -204,8 +203,8 @@ class Fetcher:
     def bomtoon(self, url: str) -> str:
         self.driver.get(url)
         self.driver.wait_element(By.ID, 'bt-sort-episode', 10)
-        res = bs(self.driver.get_source(), 'lxml').find('div', {'id': 'bt-sort-episode'}).find('a')
-        res = res.get_attribute_list('data-sort')[0].split(',')
+        res = bs(self.driver.get_source(), 'lxml').find('div', {'id': 'bt-sort-episode'}).find('a') # type: ignore
+        res = res.get_attribute_list('data-sort')[0].split(',') # type: ignore
         res.remove('h0')
         return self.hyperlink(url, len(res))
 
@@ -230,12 +229,22 @@ class Fetcher:
         time.sleep(3)
         if self.driver.driver.current_url.startswith('https://ridibooks.com/account/login'):
             self.login_ridibooks()
-            time.sleep(10)
+            time.sleep(5)
+            self.driver.get(url)
         if self.driver.wait_element(By.CLASS_NAME, 'book_count', 10):
             # Сколько всего глав на странице
             num = int(self.driver.driver.find_element(By.CLASS_NAME, 'book_count').text.split()[1][:-1])
             num = self.driver.execute(f"return document.getElementsByClassName('js_book_title')[{num-1}].textContent;")
             num = num.split()[-1][:-1]
+        else: num = '-'
+        return self.hyperlink(url, num)
+    
+    @log
+    def lezhin(self, url: str) -> str:
+        self.driver.get(url)
+        if self.driver.wait_element(By.CLASS_NAME, 'episode__name', 10):
+            num = self.driver.execute(f"return document.getElementsByClassName('episode__name');")[-1]
+            num = int(self.driver.driver.execute_script("return arguments[0].textContent;", num))  # type: ignore
         else: num = '-'
         return self.hyperlink(url, num)
 
@@ -300,5 +309,6 @@ class Fetcher:
     def login_ridibooks(self):
         self.driver.send_keys_to(By.ID, 'login_id', ACCOUNTS['ridibooks'][0])
         self.driver.send_keys_to(By.ID, 'login_pw', ACCOUNTS['ridibooks'][1])
+        time.sleep(0.5)
         self.driver.execute("document.getElementsByClassName('account-checkbox')[0].click();")
         self.driver.execute("document.getElementsByClassName('login-button')[0].click();")
