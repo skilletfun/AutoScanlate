@@ -15,6 +15,7 @@ class Browser:
         options = Options()
         options.add_argument("--disable-features=VizDisplayCompositor")
         options.add_argument('--blink-settings=imagesEnabled=false')
+        options.add_argument('--ignore-certificate-errors-spki-list')
 
         if not extensions:
             options.add_argument('--disable-extensions')
