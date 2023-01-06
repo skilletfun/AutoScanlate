@@ -122,14 +122,14 @@ class Fetcher:
 
     @log
     def kakao(self, url: str) -> str:
-        if self.get_and_wait(url, 'css-1imdls4-Text-BelowTabSelectBox'):
+        if self.get_and_wait(url, 'mr-4pxr'):
             time.sleep(1)
-            self.driver.execute('document.getElementsByClassName("css-1imdls4-Text-BelowTabSelectBox")[0].click();')
+            self.driver.execute('document.getElementsByClassName("mr-4pxr")[0].click();')
             time.sleep(1)
-            self.driver.execute('document.getElementsByClassName("css-169255i-DialogCheckButton")[1].click();')
+            self.driver.execute('document.getElementsByClassName("mx-22pxr")[1].click();')
             time.sleep(1.5)
-        if self.driver.wait_element(By.CLASS_NAME, 'css-m4uhtd-Text-SingleListViewItem'):
-            script = "return document.getElementsByClassName('css-m4uhtd-Text-SingleListViewItem')[0].textContent;"
+        if self.driver.wait_element(By.CLASS_NAME, 'mb-4pxr'):
+            script = "return document.getElementsByClassName('mb-4pxr')[0].textContent;"
             num_str = self.driver.execute(script)
             return self.hyperlink(url, num_str[:num_str.index('화')][-3:].strip())
         return self.hyperlink(url, '-')
