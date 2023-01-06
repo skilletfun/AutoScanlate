@@ -41,16 +41,17 @@ class Browser:
         """ Загружает страницу. """
         self.driver.get(url)
 
-    def execute(self, script: str, tries: int=5, sleep: float=0.5) -> Any:
+    def execute(self, script: str, tries: int=5, sleep: float=0.5, arg: Any=None) -> Any:
         """ Выполняет js-скрипт в браузере
         :param script: скрипт
         :param tries: количество попыток
         :param sleep: время ожидания перед новой попыткой
+        :param arg: аргументы для скрипта
         :return: результат выполнения
         """
         while tries > 0:
             try:
-                return self.driver.execute_script(script)
+                return self.driver.execute_script(script, arg) if arg else self.driver.execute_script(script)
             except:
                 time.sleep(sleep)
                 tries -= 1
@@ -98,6 +99,9 @@ class Browser:
         :param value: посылаемое значение
         """
         self.driver.find_element(by, key).send_keys(value)
+
+    def refresh(self) -> None:
+        self.driver.refresh()
 
     def shutdown(self) -> None:
         """ Закрывает вкладку и выключает браузер (chromedriver). """
