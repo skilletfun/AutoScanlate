@@ -57,8 +57,8 @@ def main():
             if url.startswith('http'):
                 url = url.replace('?subpath=about', '')
                 url = url.replace('?subpath=content', '')
-                if not url.endswith('?p=content'):
-                    url += '?p=content'
+                if not 'p=content' in url:
+                    url = url + ('?' if '?' not in url else '&') + 'p=content'
 
                 payed = free = date = '-'   # Платка, бесплатка и дата для таблицы
                 total_payed = 0             # Всего платок для таблицы
