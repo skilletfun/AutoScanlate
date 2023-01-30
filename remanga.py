@@ -48,10 +48,9 @@ def wait(driver: Browser) -> Tuple[str, list]:
 @log
 def main():
     sheeter = Sheet()
-    urls = sheeter.get_values('C4:C1000')[0]
-    driver = Browser(full_load=True)
+    urls = sheeter.get_values('C4:C1000')[0][:10]
 
-    try:
+    with Browser(full_load=True) as driver:
         result_arr = []
         for url in urls:
             if url.startswith('http'):
@@ -87,10 +86,7 @@ def main():
             else:
                 result_arr.append(['-', '-', '-', '-', '-'])
         sheeter.write_values(result_arr, RANGES['remanga'], dimension='ROWS')
-    except Exception as e:
-        raise e
-    finally:
-        driver.shutdown()
+
 
 if __name__ == '__main__':
     main()
