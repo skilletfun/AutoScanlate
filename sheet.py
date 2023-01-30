@@ -4,7 +4,7 @@ import httplib2
 import googleapiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
 
-from config import SHEET_ID, RANGES
+from config import SHEET_ID, RANGES, DEBUG
 
 
 class Sheet:
@@ -45,14 +45,17 @@ class Sheet:
         :param input_range: диапазон, в который будет произведена вставка
         :param dimension: каким образом вставлять данные (столбцы / строки) ['COLUMNS', 'ROWS']
         """
-        self.service.spreadsheets().values().batchUpdate(
-            spreadsheetId=SHEET_ID,
-            body={
-                "valueInputOption": "USER_ENTERED",
-                "data": [
-                    {"range": input_range,
-                     "majorDimension": dimension,
-                     "values": data},
-                ]
-            }
-        ).execute()
+        if DEBUG:
+            print(*data, sep='\n')
+        else:
+            self.service.spreadsheets().values().batchUpdate(
+                spreadsheetId=SHEET_ID,
+                body={
+                    "valueInputOption": "USER_ENTERED",
+                    "data": [
+                        {"range": input_range,
+                         "majorDimension": dimension,
+                         "values": data},
+                    ]
+                }
+            ).execute()
