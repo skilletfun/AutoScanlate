@@ -4,7 +4,7 @@ import httplib2
 import googleapiclient.discovery
 from oauth2client.service_account import ServiceAccountCredentials
 
-from config import SHEET_ID, RANGES, DEBUG
+from config import SHEET_ID, SOURCE_RANGES, DEBUG
 
 
 class Sheet:
@@ -34,7 +34,7 @@ class Sheet:
         """ Возвращает из таблицы названия тайтлов и их жанр. """
         values = self.service.spreadsheets().values().batchGet(
             spreadsheetId=SHEET_ID,
-            ranges=RANGES['names'],
+            ranges=[SOURCE_RANGES['names'], SOURCE_RANGES['genres']],
             majorDimension='COLUMNS'
         ).execute()
         return list(zip(values['valueRanges'][0]['values'][0],values['valueRanges'][1]['values'][0]))
