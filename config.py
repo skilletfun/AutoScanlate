@@ -1,28 +1,47 @@
+# Установить значение False, если продакшн
+# При True запись в таблицу происходить не будет, результат будет выводиться в консоль
+DEBUG = True
+
 # Аккаунты, которые будут использоваться в работе
 ACCOUNTS = {
-    'remanga': ('login', 'pass'),
     'kakao': ('login', 'pass'),
     'ridibooks': ('login', 'pass')
 }
 
-# Диапазоны данных в таблице (для записи)
+# В какие аккаунты потребуется авторизация (True - требуется, False - не требуется)
+LOGIN_TO = {
+    'KAKAO': True,
+    'RIDIBOOKS': True,
+    'COMICO': True
+}
+
+# Диапазоны данных в таблице для записи
 RANGES = {
     'original': 'F4:F1000',
-    'remanga': 'G4:K1000',
+    'remanga': 'H4:L1000',
     'mangalib': 'L4:L1000',
     'vk': 'O4:P1000',
     'drive': 'S4:Y1000',
-    'names': ['A4:A1000', 'R4:R1000']
+}
+
+# Диапазоны исходных даных в таблице
+SOURCE_RANGES = {
+    'names': 'A4:A1000',
+    'original': 'B4:B1000',
+    'remanga': 'C4:C1000',
+    'mangalib': 'D4:D1000',
+    'vk': 'E4:E1000',
+    'genres': 'S4:S1000'
 }
 
 # Токен вк для парсинга обсуждений группы
 VK_API_TOKEN = ''
 
 # Путь до браузерной папки User data
-PATH_TO_BROWSER = 'C:\\Users\\user\\AppData\\Local\\Chromium\\User Data\\Default'
+PATH_TO_BROWSER = 'C:\\Users\\Sergey\\AppData\\Local\\Chromium\\User Data'
 
 # ID таблицы
-SHEET_ID = ''
+SHEET_ID = '1pHLEf1qmTpZxxqZFW4xBPgopdHWzzR_R6fSl7bkyHp0'
 
 # Максимальное количество запросов к диску в секунду
 DRIVE_FETCH_LIMIT = 30
@@ -36,10 +55,10 @@ DRIVE_SCOPES = {
 
 # ID полей окна авторизации Kakao
 KAKAO_LOGIN_FIELDS_ID = {
-    'login': 'input-loginKey',       
-    'password': 'input-password',    
-    'staySigned': 'ico_check',   
-    'buttonLogin': 'btn_g highlight'
+    'login': 'id_email_2',          # новый - input-loginKey
+    'password': 'id_password_3',    # новый - input-password
+    'staySigned': 'staySignedIn',   # новый - ico_check
+    'buttonLogin': 'btn_confirm submit btn_g'   # новый - btn_g highlight
 }
 
 # Кастомные заголовки

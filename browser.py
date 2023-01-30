@@ -11,6 +11,12 @@ from config import PATH_TO_BROWSER
 
 class Browser:
     """ Предоставляет доступ к браузеру. """
+    CHECK_DICT = {
+        By.ID: 'return document.getElementById',
+        By.CLASS_NAME: 'return document.getElementsByClassName',
+        By.TAG_NAME: 'return document.getElementsByTagName',
+    }
+
     def __init__(self, user=True, full_load=False, extensions=False):
         options = Options()
         options.add_argument("--disable-features=VizDisplayCompositor")
@@ -30,12 +36,13 @@ class Browser:
         else:
             self.driver = webdriver.Chrome(options=options)
 
-        self.CHECK_DICT = {
-            By.ID: 'return document.getElementById',
-            By.CLASS_NAME: 'return document.getElementsByClassName',
-            By.TAG_NAME: 'return document.getElementsByTagName',
-        }
         self.driver.switch_to.new_window('tab')
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.shutdown()
 
     def get(self, url: str) -> None:
         """ Загружает страницу. """
@@ -62,7 +69,7 @@ class Browser:
         :param by: как искать элемент [By.CLASS_NAME, By.ID, By.TAG_NAME]
         :param value: значение для поиска
         :param by_driver: искать через метод selenium или через script js
-        :return: True / None
+        :return: Any
         """
         try:
             if by_driver:
@@ -88,6 +95,17 @@ class Browser:
                 if max_wait < 0:
                     return False
                 time.sleep(0.2)
+
+    def get_and_wait(self, url: str, key: str, by: str=By.CLASS_NAME, max_wait: int=10) -> bool:
+        """ Прогружает страницу и ждет до тех пор, пока не появится указанный элемент или не истечен время
+        :param url: ссылка на страницу
+        :param key: элемент, который ожидается
+        :param by: по какому тегу будет происходить поиск элемента
+        :param max_wait: максимальное количество ожидания (с)
+        :return: True если элемент прогружен, в противном случае False
+        """
+        self.driver.get(url)
+        return self.driver.wait_element(by, key, max_wait)
 
     def get_source(self) -> str:
         return self.driver.page_source

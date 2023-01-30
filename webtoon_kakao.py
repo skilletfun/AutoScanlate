@@ -25,17 +25,11 @@ def scroll_page(driver: Browser) -> None:
 
 @log
 def main(url: str) -> str:
-    driver = Browser(user=True, full_load=True, extensions=True)
-    try:
-        driver.get(url)
-        driver.wait_element(By.CLASS_NAME, 'mx-11', 20)
+    with Browser(user=True, full_load=True, extensions=True) as driver:
+        driver.get_and_wait(url, 'mx-11')
         scroll_page(driver)
         num = len(bs(driver.get_source(), 'lxml').find('div', {'class': 'mx-11'}).find('ul').find_all('li'))
         return f'=ГИПЕРССЫЛКА("{url}";"{num}")'
-    except Exception as e:
-        raise e
-    finally:
-        driver.shutdown()
 
 
 if __name__ == '__main__':
