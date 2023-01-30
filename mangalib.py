@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from sheet import Sheet
 from browser import Browser
 from logger import log
-from config import RANGES
+from config import RANGES, SOURCE_RANGES
 
 
 @log
@@ -47,7 +47,7 @@ def load_url(driver: Browser, url: str) -> str:
 def main():
     with Browser(user=False) as driver:
         sheeter = Sheet()
-        result_arr = [load_url(driver, url) for url in sheeter.get_values('D4:D1000')[0]]
+        result_arr = [load_url(driver, url) for url in sheeter.get_values(SOURCE_RANGES['mangalib'])[0]]
         sheeter.write_values([result_arr], RANGES['mangalib'])
 
 

@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from sheet import Sheet
 from browser import Browser
 from logger import log
-from config import RANGES
+from config import RANGES, SOURCE_RANGES
 
 
 @log
@@ -48,7 +48,7 @@ def wait(driver: Browser) -> Tuple[str, list]:
 @log
 def main():
     sheeter = Sheet()
-    urls = sheeter.get_values('C4:C1000')[0]
+    urls = sheeter.get_values(SOURCE_RANGES['remanga'])[0]
 
     with Browser(full_load=True) as driver:
         result_arr = []
