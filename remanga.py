@@ -48,7 +48,7 @@ def wait(driver: Browser) -> Tuple[str, list]:
 @log
 def main():
     sheeter = Sheet()
-    urls = sheeter.get_values('C4:C1000')[0][:10]
+    urls = sheeter.get_values('C4:C1000')[0]
 
     with Browser(full_load=True) as driver:
         result_arr = []
