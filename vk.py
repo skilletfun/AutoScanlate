@@ -6,7 +6,7 @@ import aiovk
 
 from logger import log
 from sheet import Sheet
-from config import RANGES, VK_API_TOKEN
+from config import RANGES, SOURCE_RANGES, VK_API_TOKEN
 
 
 @log
@@ -17,7 +17,7 @@ async def fill_vk():
     """
     payed, free = '-', '-'
     sheeter = Sheet()
-    urls = sheeter.get_values('E4:E1000')[0]
+    urls = sheeter.get_values(SOURCE_RANGES['vk'])[0]
     group_id = urls[0].split('-')[1].split('_')[0]
     topics = [el.split('-')[1].split('_')[1] for el in urls]
     result_arr = []
