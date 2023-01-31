@@ -56,10 +56,10 @@ DRIVE_SCOPES = {
 
 # ID полей окна авторизации Kakao
 KAKAO_LOGIN_FIELDS_ID = {
-    'login': 'id_email_2',          # новый - input-loginKey
-    'password': 'id_password_3',    # новый - input-password
-    'staySigned': 'staySignedIn',   # новый - ico_check
-    'buttonLogin': 'btn_confirm submit btn_g'   # новый - btn_g highlight
+    'login': 'input-loginKey',
+    'password': 'input-password',
+    'staySigned': 'ico_check',
+    'buttonLogin': 'btn_g highlight'
 }
 
 # Кастомные заголовки
