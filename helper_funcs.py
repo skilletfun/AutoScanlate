@@ -36,7 +36,7 @@ def format_number(num: str) -> str:
     result = ''.join([el if el.isdigit() else ' ' for el in num])
     return '.'.join(result.split()) if result else '-'
 
-def titles_for_download(orig_arr, new_arr):
+def titles_for_download(orig_arr, new_arr) -> list:
     result_arr = []
     for i in range(min(len(orig_arr), len(new_arr))):
         if orig_arr[i].strip() and new_arr[i].strip() and orig_arr[i] != '-' and new_arr[i] != '-':
@@ -48,9 +48,16 @@ def titles_for_download(orig_arr, new_arr):
 
 
 @log
-def login_comico(driver: Browser) -> bool:
+def login_comico(driver: Browser) -> None:
     driver.get('https://comico.kr/login')
     driver.execute("document.getElementsByClassName('btn_kakao')[0].click();")
+    time.sleep(10)\
+
+@log
+def login_bomtoon(driver: Browser) -> None:
+    driver.get('https://bomtoon.com/')
+    driver.execute("document.getElementsByClassName('close')[0].click();")
+    driver.execute("document.getElementsByClassName('k')[0].click();")
     time.sleep(10)
 
 @log
@@ -88,7 +95,7 @@ def login_kakao(driver: Browser) -> None:
             driver.driver.switch_to.window(parent)
 
 @log
-def login_ridibooks(driver: Browser):
+def login_ridibooks(driver: Browser) -> None:
     driver.get('https://ridibooks.com/account/login')
     if driver.current_url.startswith("https://ridibooks.com/account/login"):
         input_form = driver.execute(f"return document.getElementsByTagName('input');")
@@ -110,6 +117,8 @@ def login_all(driver: Browser):
         login_kakao(driver)
     if LOGIN_TO['COMICO']:
         login_comico(driver)
+    if LOGIN_TO['BOMTOON']:
+        login_bomtoon(driver)
     if LOGIN_TO['RIDIBOOKS']:
         login_ridibooks(driver)
     if LOGIN_TO['LEZHIN']:
