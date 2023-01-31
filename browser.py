@@ -105,7 +105,7 @@ class Browser:
         :return: True если элемент прогружен, в противном случае False
         """
         self.driver.get(url)
-        return self.driver.wait_element(by, key, max_wait)
+        return self.wait_element(by, key, max_wait)
 
     def get_source(self) -> str:
         return self.driver.page_source
@@ -125,3 +125,7 @@ class Browser:
         """ Закрывает вкладку и выключает браузер (chromedriver). """
         self.driver.close()
         self.driver.quit()
+
+    @property
+    def current_url(self):
+        return self.driver.current_url
