@@ -1,6 +1,6 @@
 # Установить значение False, если продакшн
 # При True запись в таблицу происходить не будет, результат будет выводиться в консоль
-DEBUG = True
+DEBUG = False
 
 # Аккаунты, которые будут использоваться в работе
 ACCOUNTS = {
@@ -38,19 +38,20 @@ SOURCE_RANGES = {
 VK_API_TOKEN = ''
 
 # Путь до браузерной папки User data
-PATH_TO_BROWSER = 'C:\\Users\\Sergey\\AppData\\Local\\Chromium\\User Data'
+PATH_TO_BROWSER = 'C:\\Users\\User\\AppData\\Local\\Chromium\\User Data'
 
 # ID таблицы
-SHEET_ID = '1pHLEf1qmTpZxxqZFW4xBPgopdHWzzR_R6fSl7bkyHp0'
+SHEET_ID = ''
 
 # Максимальное количество запросов к диску в секунду
-DRIVE_FETCH_LIMIT = 30
+DRIVE_FETCH_LIMIT = 15
 
 # Название и ID гугл-папок, по которым будет происходить поиск
 DRIVE_SCOPES = {
-    'folder1': 'id1',
-    'folder2': 'id2',
-    'folder3': 'id3'
+    'folder_name_1': 'folder_id_1',
+    'folder_name_2': 'folder_id_2',
+    'folder_name_3': 'folder_id_3',
+    'folder_name_4': 'folder_id_4'
 }
 
 # ID полей окна авторизации Kakao
