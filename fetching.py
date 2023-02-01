@@ -1,6 +1,7 @@
 import time
 import json
 import asyncio
+from string import punctuation
 from typing import Union, Any, List
 
 import aiohttp
@@ -77,8 +78,7 @@ class Fetcher:
             self.driver.execute('document.getElementsByClassName("mx-22pxr")[1].click();')
             time.sleep(0.5)
             if self.driver.wait_element(By.CLASS_NAME, 'mb-4pxr'):
-                script = "return document.getElementsByClassName('mb-4pxr')[0].textContent;"
-                num_str = self.driver.execute(script)
+                num_str = self.driver.execute("return document.getElementsByClassName('mb-4pxr')[0].textContent;")
                 return hyperlink(url, num_str[:num_str.index('화')][-3:].strip())
         return hyperlink(url, '-')
 
@@ -87,8 +87,8 @@ class Fetcher:
         script = "return document.getElementById('volumeList').firstChild.getElementsByTagName('strong')[0].textContent;"
         if 'sortOrder=DESC' not in url:
             url += '&sortOrder=DESC'
-        self.driver.get(url)
-        while not ((res := self.driver.execute(script)) is False):
+        if self.driver.get_and_wait(url, 'subj'):
+            res = self.driver.execute(script)
             res = res[:res.rfind('(')]
             res = ''.join([el for el in res.split('.')[0].split('-')[0].split()[-1] if el.isdigit()])
             return hyperlink(url, res)
@@ -115,7 +115,6 @@ class Fetcher:
 
     @log
     async def futabanet(self, url: str) -> str:
-        from string import punctuation
         res = bs(await self.async_get_response(url), 'lxml').find('div', {'class': 'detail-ex__btn-item--latest'})
         res = res.getText().strip().split('\n')[1][1:]
         res = ''.join([(el if el.isdigit() or el in punctuation else '') for el in res])
@@ -142,27 +141,30 @@ class Fetcher:
 
     @log
     def bilibili(self, url: str) -> str:
-        self.driver.get_and_wait(url, 'last-update')
-        num = self.driver.execute("return document.getElementsByClassName('last-update')[0].textContent;").split()[1]
-        return hyperlink(url, num)
+        if self.driver.get_and_wait(url, 'last-update'):
+            num = self.driver.execute("return document.getElementsByClassName('last-update')[0].textContent;").split()[1]
+            return hyperlink(url, num)
+        return hyperlink(url, '-')
 
     @log
     def bomtoon(self, url: str) -> str:
-        self.driver.get_and_wait(url, 'bt-sort-episode', By.ID)
-        res = bs(self.driver.get_source(), 'lxml').find('div', {'id': 'bt-sort-episode'}).find('a')
-        res = res.get_attribute_list('data-sort')[0].split(',')
-        res.remove('h0')
-        return hyperlink(url, len(res))
+        if self.driver.get_and_wait(url, 'bt-sort-episode', By.ID):
+            res = bs(self.driver.get_source(), 'lxml').find('div', {'id': 'bt-sort-episode'}).find('a')
+            res = res.get_attribute_list('data-sort')[0].split(',')
+            res.remove('h0')
+            return hyperlink(url, len(res))
+        return hyperlink(url, '-')
 
     @log
     def shonenmagazine(self, url: str) -> str:
         self.driver.get(url)
         time.sleep(5)
         self.driver.driver.execute_script('window.scrollBy(0, 1500);')
-        self.driver.wait_element(By.CLASS_NAME, 'series-episode-list-title', 10)
-        num = self.driver.execute("return document.getElementsByClassName('series-episode-list-title')[0].textContent;")
-        num = ''.join([el if el.isdigit() else ' ' for el in num]).split()[0]
-        return hyperlink(url, num)
+        if self.driver.wait_element(By.CLASS_NAME, 'series-episode-list-title', 10):
+            num = self.driver.execute("return document.getElementsByClassName('series-episode-list-title')[0].textContent;")
+            num = ''.join([el if el.isdigit() else ' ' for el in num]).split()[0]
+            return hyperlink(url, num)
+        return hyperlink(url, '-')
 
     @log
     def webtoon_kakao(self, url: str) -> str:
