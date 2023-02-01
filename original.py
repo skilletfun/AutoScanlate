@@ -7,7 +7,7 @@ from sheet import Sheet
 from fetching import Fetcher
 from browser import Browser
 from config import RANGES, SOURCE_RANGES
-from helper_funcs import login_all, titles_for_download
+from helper_funcs import titles_for_download, connect_to_browser
 
 
 async def fetch(fetcher: Fetcher, url: Tuple[int, str], browser: Browser=None) -> Tuple[int, Union[int, str]]:
@@ -20,13 +20,12 @@ async def fetch(fetcher: Fetcher, url: Tuple[int, str], browser: Browser=None) -
     return url[0], await fetcher.fetch(url[1], browser=browser)
 
 @log
-async def fill_original(urls: list[str]) -> None:
+async def fill_original(urls: list[str]) -> list:
     """ Заполнение столбца Оригинал """
     fetcher = Fetcher()
     original_dict = dict(await asyncio.gather(*[fetch(fetcher, url) for url in enumerate(urls)]))
 
-    with Browser(full_load=True) as driver:
-        login_all(driver)
+    with connect_to_browser() as driver:
         br_original = await asyncio.gather(*[fetch(fetcher, url, browser=driver) for url in enumerate(urls)])
 
     original_dict.update(dict(filter(lambda x: x[1] != 'url error', br_original)))
@@ -41,7 +40,7 @@ async def fill_original(urls: list[str]) -> None:
 async def main():
     sheeter = Sheet()
     urls = sheeter.get_values(SOURCE_RANGES['original'])[0]
-    await fill_original(urls)
+    result_arr = await fill_original(urls)
     sheeter.write_values(
         [result_arr],
         RANGES['original']
