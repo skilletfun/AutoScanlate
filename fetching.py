@@ -10,7 +10,7 @@ from selenium.webdriver.common.keys import Keys
 
 from logger import log
 from browser import Browser
-from config import HEADERS, ACCOUNTS, KAKAO_LOGIN_FIELDS_ID
+from config import HEADERS, KAKAO_LOGIN_FIELDS_ID
 from helper_funcs import hyperlink, format_number
 
 
@@ -172,7 +172,6 @@ class Fetcher:
     @log
     def ridibooks(self, url: str) -> str:
         if self.driver.get_and_wait(url, 'book_count'):
-            # Сколько всего глав на странице
             num = int(self.driver.driver.find_element(By.CLASS_NAME, 'book_count').text.split()[1][:-1])
             num = self.driver.execute(f"return document.getElementsByClassName('js_book_title')[{num-1}].textContent;")
             num = num.split()[-1][:-1]
@@ -189,8 +188,6 @@ class Fetcher:
 
     @log
     def comico(self, url: str) -> str:
-        self.driver.get(url)
-        while not self.driver.wait_element(By.CLASS_NAME, 'list_product'):
-            time.sleep(0.2)
-            continue
-        return hyperlink(url, format_number(self.driver.driver.find_elements(By.CLASS_NAME, 'tit_episode')[-1].text))
+        if self.driver.get_and_wait(url, 'list_product'):
+            return hyperlink(url, format_number(self.driver.driver.find_elements(By.CLASS_NAME, 'tit_episode')[-1].text))
+        return hyperlink(url, '-')
