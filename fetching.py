@@ -33,6 +33,7 @@ class Fetcher:
                 'https://ridibooks.com': self.ridibooks,
                 'https://manga.bilibili.com': self.bilibili,
                 'https://www.bomtoon.com': self.bomtoon,
+                'https://bomtoon.com': self.bomtoon,
                 'https://www.comico.': self.comico,
                 'https://www.pocketcomics.com': self.comico,
                 'https://pocket.shonenmagazine.com': self.shonenmagazine,
