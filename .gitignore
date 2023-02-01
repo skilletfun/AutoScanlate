@@ -7,3 +7,4 @@ __pycache__
 env
 settings.json
 .vscode
+session.json
