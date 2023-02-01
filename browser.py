@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-from config import PATH_TO_BROWSER
+from config import PATH_TO_BROWSER, ARGS_FOR_BROWSER
 
 
 class Browser:
@@ -17,25 +17,10 @@ class Browser:
         By.TAG_NAME: 'return document.getElementsByTagName',
     }
 
-    def __init__(self, user=True, full_load=False, extensions=False):
-        options = Options()
-        options.add_argument("--disable-features=VizDisplayCompositor")
-        options.add_argument('--blink-settings=imagesEnabled=false')
-        options.add_argument('--ignore-certificate-errors-spki-list')
-
-        if not extensions:
-            options.add_argument('--disable-extensions')
-
-        if user:
-            options.add_argument("--user-data-dir=" + PATH_TO_BROWSER)
-
-        if not full_load:
-            capa = DesiredCapabilities.CHROME
-            capa["pageLoadStrategy"] = "none"
-            self.driver = webdriver.Chrome(options=options, desired_capabilities=capa)
-        else:
-            self.driver = webdriver.Chrome(options=options)
-
+    def __init__(self, url, session_id):
+        self.driver = webdriver.Remote(command_executor=url)
+        self.driver.close()
+        self.driver.session_id = session_id
         self.driver.switch_to.new_window('tab')
 
     def __enter__(self):
@@ -122,9 +107,7 @@ class Browser:
         self.driver.refresh()
 
     def shutdown(self) -> None:
-        """ Закрывает вкладку и выключает браузер (chromedriver). """
         self.driver.close()
-        self.driver.quit()
 
     @property
     def current_url(self):
