@@ -7,6 +7,7 @@ from sheet import Sheet
 from browser import Browser
 from logger import log
 from config import RANGES, SOURCE_RANGES
+from helper_funcs import connect_to_browser
 
 
 @log
@@ -46,16 +47,12 @@ def wait(driver: Browser) -> Tuple[str, list]:
     return marketing, children
 
 @log
-def main():
-    sheeter = Sheet()
-    urls = sheeter.get_values(SOURCE_RANGES['remanga'])[0]
-
-    with Browser(full_load=True) as driver:
+def parse(urls):
+    with connect_to_browser() as driver:
         result_arr = []
         for url in urls:
             if url.startswith('http'):
-                url = url.replace('?subpath=about', '')
-                url = url.replace('?subpath=content', '')
+                url = url.replace('?subpath=about', '').replace('?subpath=content', '')
                 if not 'p=content' in url:
                     url = url + ('?' if '?' not in url else '&') + 'p=content'
 
@@ -85,7 +82,12 @@ def main():
                 result_arr.append([payed, free, total_payed, date, marketing])
             else:
                 result_arr.append(['-', '-', '-', '-', '-'])
-        sheeter.write_values(result_arr, RANGES['remanga'], dimension='ROWS')
+        return result_arr
+
+@log
+def main():
+    sheeter = Sheet()
+    sheeter.write_values(parse(sheeter.get_values(SOURCE_RANGES['remanga'])[0]), RANGES['remanga'], dimension='ROWS')
 
 
 if __name__ == '__main__':
