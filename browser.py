@@ -21,6 +21,7 @@ class Browser:
         self.driver = webdriver.Remote(command_executor=url)
         self.driver.close()
         self.driver.session_id = session_id
+        self.root_handle = self.driver.current_window_handle
         self.driver.switch_to.new_window('tab')
 
     def __enter__(self):
@@ -108,6 +109,7 @@ class Browser:
 
     def shutdown(self) -> None:
         self.driver.close()
+        self.driver.switch_to.window(self.root_handle)
 
     @property
     def current_url(self):
