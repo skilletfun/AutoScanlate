@@ -6,6 +6,7 @@ from config import RANGES, SOURCE_RANGES
 from original import fill_original
 from mangalib import load_url
 from session import main
+from remanga import parse
 from helper_funcs import connect_to_browser
 
 
@@ -17,6 +18,11 @@ def test_original():
     print(asyncio.run(fill_original(Sheet().get_values('TestData!A1:A100')[0])), sep='\n')
 
 
+def test_remanga():
+    print(parse(Sheet().get_values('TestData!B1:B100')[0]))
+
+
 if __name__ == '__main__':
-    test_mangalib()
-    test_original()
+    # test_mangalib()
+    # test_original()
+    test_remanga()
