@@ -176,7 +176,7 @@ class Fetcher:
         if self.driver.get_and_wait(url, 'book_count'):
             num = int(self.driver.driver.find_element(By.CLASS_NAME, 'book_count').text.split()[1][:-1])
             num = self.driver.execute(f"return document.getElementsByClassName('js_book_title')[{num-1}].textContent;")
-            num = num.split()[-1][:-1]
+            num = num[:num.index('화')].split()[-1]
         else: num = '-'
         return hyperlink(url, num)
     
