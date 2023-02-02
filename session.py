@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-from config import ARGS_FOR_BROWSER, SESSION_PATH
+from config import ARGS_FOR_BROWSER, SESSION_PATH, PATH_TO_BROWSER
 
 
 def main():
@@ -12,6 +12,7 @@ def main():
     for arg in ARGS_FOR_BROWSER:
         options.add_argument(arg)
 
+    options.add_argument('--user-data-dir=' + PATH_TO_BROWSER)
     capa = DesiredCapabilities.CHROME
     capa["pageLoadStrategy"] = "none"
 
