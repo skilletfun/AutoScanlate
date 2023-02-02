@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-from config import ARGS_FOR_BROWSER
+from config import ARGS_FOR_BROWSER, SESSION_PATH
 
 
 def main():
@@ -17,15 +17,14 @@ def main():
 
     driver = webdriver.Chrome(options=options, desired_capabilities=capa)
 
-    with open('session.json', 'w') as out:
+    with open(SESSION_PATH, 'w') as out:
         out.write(json.dumps({'url': driver.command_executor._url, 'session_id': driver.session_id}))
 
     input('Нажмите Enter, чтобы завершить сессию...')
 
-    with open('session.json', 'w') as out:
+    with open(SESSION_PATH, 'w') as out:
         out.write(json.dumps({'url': None, 'session_id': None}))
 
-    exit(0)
 
 if __name__ == '__main__':
     main()
