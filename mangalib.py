@@ -34,7 +34,7 @@ def load_url(driver: Browser, url: str) -> str:
     total_time = 5
     driver.get(url.replace('mangalib.me', 'mangalib.org'))  # Потому что к .me - access denied
     while True:
-        if driver.check_element(By.CLASS_NAME, 'media-chapter__name', max_wait=5, by_driver=True):
+        if driver.check_element(By.CLASS_NAME, 'media-chapter__name', by_driver=True):
             return f'=ГИПЕРССЫЛКА("{url}";"{get_chapter(driver)}")'
         elif driver.check_element(By.CLASS_NAME, 'paper empty section'):
             return f'=ГИПЕРССЫЛКА("{url}";"-")'
