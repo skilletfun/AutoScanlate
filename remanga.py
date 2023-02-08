@@ -68,7 +68,7 @@ def parse(urls):
                     chapter_type_flag = driver.execute("return arguments[0].getElementsByTagName('svg')[0].hasAttribute('aria-label');", arg=child)
                     # Дата главы
                     if date == '-':
-                        date = driver.execute("return arguments[0].getElementsByTagName('p')[1].textContent;", arg=child).replace('/', '.')
+                        date = driver.execute("return arguments[0].getElementsByTagName('p')[2].textContent;", arg=child).replace('/', '.')
                     # Номер главы
                     num = driver.execute("return arguments[0].getElementsByTagName('p')[0].textContent;", arg=child).split()[1]
 
